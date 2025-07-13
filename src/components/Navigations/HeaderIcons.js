@@ -1,11 +1,12 @@
+import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-export default function HeaderIcons() {
+export default function HeaderIcons({setIsMobileSearch}) {
     const [tab, setTab] = useState(false)
 
     return (
-        <div className='flex justify-center gap-5'>
+        <div className='flex justify-center gap-9'>
             <div className=''>
                 <Link href="/account/user">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="transition-transform duration-300 ease-in-out hover:scale-110 cursor-pointer text-primary size-6">
@@ -59,6 +60,14 @@ export default function HeaderIcons() {
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Search Button */}
+            <button
+                className="lg:hidden text-gray-500"
+                onClick={() => setIsMobileSearch(true)}
+            >
+                <Search className="w-5 h-5  cursor-pointer text-primary size-5" />
+            </button>
 
         </div>
     );
