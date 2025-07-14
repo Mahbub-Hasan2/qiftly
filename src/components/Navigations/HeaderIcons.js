@@ -1,6 +1,8 @@
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 import Link from 'next/link';
 import { useState } from 'react';
+
+
 
 export default function HeaderIcons({setIsMobileSearch}) {
     const [tab, setTab] = useState(false)
