@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 
 export default function SearchSuggestions({ show, collections, trendingGifts }) {
   if (!show) return null;

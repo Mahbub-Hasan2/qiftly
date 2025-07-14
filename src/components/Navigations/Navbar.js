@@ -9,6 +9,7 @@ import Image from 'next/image';
 
 export default function Navbar() {
     const [isMobileSearch, setIsMobileSearch] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
     return (
         <nav className="bg-white shadow pt-3">
@@ -22,7 +23,7 @@ export default function Navbar() {
 
                     </button>
                     <div className="flex-1">
-                        <SearchInput />
+                        <SearchInput isFocused={isFocused} setIsFocused={setIsFocused} />
                     </div>
                 </div>
             )}
@@ -40,13 +41,13 @@ export default function Navbar() {
                 {/* Desktop Search */}
                 <div className="hidden lg:flex mr-auto w-1/2">
                     <div className="w-full mx-auto">
-                        <SearchInput />
+                        <SearchInput isFocused={isFocused} setIsFocused={setIsFocused}  />
                     </div>
                 </div>
 
 
                 {/* Icons */}
-                <HeaderIcons setIsMobileSearch={setIsMobileSearch} />
+                <HeaderIcons setIsMobileSearch={setIsMobileSearch} setIsFocused={setIsFocused} />
             </div>
 
             {/* Mega Menu - only on desktop */}
