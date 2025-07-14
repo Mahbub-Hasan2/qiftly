@@ -17,11 +17,13 @@ export default function Contents() {
   }, []);
 
   return (
-    <div>
-      {hash === "profile" && <PersonalInfo />}
-      {hash === "orders" && <Orders />}
-      {hash === "address" && <SavedAddresses />}
-      {hash === "occassions" && <OccasionContent />}
-    </div>
+    hash && (
+      <div className="w-full md:flex-1">
+        {hash === "profile" && <PersonalInfo />}
+        {hash === "orders" && <Orders />}
+        {hash === "address" && <SavedAddresses />}
+        {hash === "occassions" && <OccasionContent />}
+      </div>
+    )
   );
 }

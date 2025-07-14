@@ -1,9 +1,13 @@
+import SectionHeader from "./SectionHeader";
+
 export default function OccasionContent() {
   return (
-    <div className="w-full md:w-3/4 p-6">
-      <h2 className="text-xl font-semibold text-olive-700 mb-4">
-        Your Occassions Munir Uddin Mahbub
-      </h2>
+    <div className="">
+      
+      <SectionHeader>
+        Your Occassions Ahsanul Haque
+      </SectionHeader>
+
       <div className="text-center mt-10">
         <img
           src="https://fnp.qa/images/empty/occasion-reminder.svg"

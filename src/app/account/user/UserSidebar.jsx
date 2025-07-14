@@ -63,7 +63,7 @@ export default function UserSidebar() {
   };
 
   return (
-    <div className="w-full md:w-1/4 border-r border-gray-200  rounded-t-xl overflow-clip">
+    <div className={`w-full min-w-60 md:w-1/4 md:border-r  border-gray-200  rounded-t-xl overflow-clip ${active ? "hidden md:block" : ""}`}>
       <div className="bg-primary text-white py-6 px-4 flex items-center gap-3">
         {profileImg ? (
           <Image src={profileImg} className="size-10 bg-amber-200 rounded-full border-2 object-cover border-secondary"/>
@@ -77,18 +77,18 @@ export default function UserSidebar() {
       </div>
 
 
-      <ul className="flex flex-col gap-4 mt-4">
-        {sidebarItems.map((item) => (
+      <ul className="flex flex-col gap-4 md:mt-4">
+        {sidebarItems.map((item, idx) => (
           <li
             key={item.label}
             onClick={() => handleSidbarItemClick(item)}
-            className={` pr-5 text-md text-gray-400 hover:text-primary cursor-pointer flex items-center gap-6 group ${
+            className={`p-4 md:p-0 rounded-xl md:rounded-none md:pr-5 text-md text-gray-400 hover:text-primary cursor-pointer flex items-center border md:border-0 border-gray-200 gap-6 group ${
               item.hash && active === item.hash
-                ? "border-r-2 border-r-secondary text-primary"
+                ? "md:border-r-2 md:border-r-secondary md:text-primary"
                 : ""
-            }`}
+            } ${idx===0 ? "rounded-t-none" : ""}`}
           >
-           <span className={`size-10 grid place-items-center rounded-full text-gray-400 group-hover:bg-gray-200 ${item.hash && item.hash === active ? "bg-gray-200" : ""}`}>
+           <span className={`size-10 shrink-0 grid place-items-center rounded-full text-gray-400 group-hover:bg-gray-200 ${item.hash && item.hash === active ? "bg-gray-200" : ""}`}>
             {<item.icon size={20} />}
             </span> 
             {item.label}
