@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SearchSuggestions from './SearchSuggestions';
 
 export default function SearchInput({ isFocused, setIsFocused }) {
   const [query, setQuery] = useState('');
+
+  const wrapperRef = useRef(null); // সার্চ ইনপুট ও সাজেশন সহ সব কভার করবে
+  const inputRef = useRef(null);   // ইনপুট ফোকাসের জন্য
 
   const collections = [
     'Birthday Cake', 'Buy Balloons', 'Flower Shop',
@@ -33,28 +36,37 @@ export default function SearchInput({ isFocused, setIsFocused }) {
     },
   ];
 
-  // Set input focus without SSR mismatch
+  // Auto-focus when `isFocused` becomes true
   useEffect(() => {
-    if (typeof window !== 'undefined' && isFocused) {
-      // Delay to ensure input is mounted
-      setTimeout(() => {
-        const input = document.getElementById('main-search-input');
-        input?.focus();
-      }, 50);
+    if (isFocused) {
+      inputRef.current?.focus();
     }
   }, [isFocused]);
 
+  // Outside click detection
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setIsFocused(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative w-full">
+    <div ref={wrapperRef} className="relative w-full">
       {/* Input box */}
       <div className="flex items-center w-full border border-gray-500 rounded-md overflow-hidden bg-white focus-within:ring-1 focus-within:ring-gray-500 hover:ring-1 hover:ring-gray-500 transition">
         <input
-          id="main-search-input"
+          ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => setTimeout(() => setIsFocused(false), 200)}
           placeholder="Search for something..."
           className="w-full px-3 py-2.5 outline-none"
         />
