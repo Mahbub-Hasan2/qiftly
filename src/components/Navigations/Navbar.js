@@ -6,10 +6,11 @@ import SearchInput from './SearchInput';
 import HeaderIcons from './HeaderIcons';
 import QiftlyLogo from "../../assets/images/Qiftly_logo__2_.png"
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Navbar() {
     const [isMobileSearch, setIsMobileSearch] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
 
     return (
         <nav className="bg-white shadow pt-3">
@@ -30,18 +31,22 @@ export default function Navbar() {
 
             {/* Top nav area */}
             <div className="max-w-7xl mx-auto px-4 py-3 gap-x-10 flex items-center justify-between border-b border-gray-200 relative">
-                <Image
-                    src={QiftlyLogo}
-                    width={120}
-                    height={40}
-                    alt="Qiftly Logo"
-                    priority  
-                />
 
+                <Link
+                    href="/"
+                >
+                    <Image
+                        src={QiftlyLogo}
+                        width={120}
+                        height={40}
+                        alt="Qiftly Logo"
+                        priority
+                    />
+                </Link>
                 {/* Desktop Search */}
                 <div className="hidden lg:flex mr-auto w-1/2">
                     <div className="w-full mx-auto">
-                        <SearchInput isFocused={isFocused} setIsFocused={setIsFocused}  />
+                        <SearchInput isFocused={isFocused} setIsFocused={setIsFocused} />
                     </div>
                 </div>
 
