@@ -25,7 +25,8 @@ const slides = [
   }
 ];
 
-export default function HeroSlider() {
+export default function HeroSlider({slides}) {
+  console.log(slides)
   const [current, setCurrent] = useState(0);
   const [translate, setTranslate] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
