@@ -1,11 +1,21 @@
+import CategorySection from "@/components/Home/CategorySection";
+import GiftFinderWizard from "@/components/Home/GiftFinderWizard";
 import HeroSlider from "@/components/Home/HeroSlider";
+import OccasionBasedGifting from "@/components/Home/OccasionBasedGifting";
+import RoomWiseDecor from "@/components/Home/RoomWiseDecor";
+import PerfectProductSlider from "@/components/products/PerfectProductSlider";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="md:p-4 p-1 bg-gray-50 flex items-center justify-center">
+    <main className="md:p-4 p-1 flex items-center justify-center">
       <div className="w-full max-w-7xl">
         <HeroSlider />
+        {/* <OccasionBasedGifting /> */}
+        {/* <RoomWiseDecor /> */}
+        <CategorySection />
+        <GiftFinderWizard />
+        <PerfectProductSlider/>
       </div>
     </main>
   );
