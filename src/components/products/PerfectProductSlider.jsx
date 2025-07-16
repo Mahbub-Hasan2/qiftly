@@ -35,7 +35,9 @@ const products = [
   },
 ];
 
-export default function PerfectProductSlider() {
+export default function PerfectProductSlider({ products }) {
+  console.log(products)
+  const [selected, setSelected] = useState(null);
   const [current, setCurrent] = useState(0);
 
   const prev = () => {
