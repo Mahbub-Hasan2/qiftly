@@ -53,7 +53,7 @@ if (typeof window === 'undefined') return null;
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className={`fixed inset-0 bg-black/40 backdrop-blur-sm grid place-items-center`}
+          className={`fixed inset-0 bg-black/40 backdrop-blur-sm grid place-items-center p-3`}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -66,7 +66,7 @@ if (typeof window === 'undefined') return null;
             {closeButton && (
               <X
                 onClick={onClose}
-                className="absolute top-2 right-2 cursor-pointer hover:text-primary duration-300"
+                className="absolute top-4 right-4 cursor-pointer hover:text-primary duration-300"
                 size={20}
               />
             )}
