@@ -163,7 +163,7 @@ const handleChange = (e) => {
             <button onClick={() => setActiveModal(null)} className="button-primary bg-transparent text-primary border border-gray-400 rounded-lg">
               Cancel
             </button>
-            <button onClick={handleUpdateUser} className="button-primary border border-primary rounded-lg">
+            <button onClick={handleUpdateUser} className="button-primary border border-primary rounded-lg px-6">
               Save
             </button>
           </div>

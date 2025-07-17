@@ -1,0 +1,24 @@
+import React from 'react'
+import { twMerge } from 'tailwind-merge';
+
+function InputField ({label, type, value, name,required, onChange, className, placeholder, containerClassName, disabled = false}) {
+  return (
+    <div className={twMerge("w-full", containerClassName)}>
+      <label className="text-gray-800 font-semibold text-sm mb-2 block">
+       {label}
+      </label>
+      <input
+        type={type}
+        value={value}
+        name={name}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        disabled={disabled}
+        className={twMerge("input-field", className)}
+      />
+    </div>
+  );
+};
+
+export default InputField
