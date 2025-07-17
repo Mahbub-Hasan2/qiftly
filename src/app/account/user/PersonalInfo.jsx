@@ -122,7 +122,7 @@ const handleChange = (e) => {
             <label className="text-gray-800 font-semibold text-sm mb-2 block">
               Phone
             </label>
-            <div className="border rounded-lg border-gray-200/40 p-0 flex gap-5 px-3">
+            <div className="border rounded-lg border-gray-200/40 p-0 flex gap-5 pl-3">
               <div className="flex items-center gap-1 text-gray-400">
                 <img
                   src="https://flagcdn.com/16x12/qa.png"

@@ -15,7 +15,7 @@ function InputField ({label, type, value, name,required, onChange, className, pl
         placeholder={placeholder}
         required={required}
         disabled={disabled}
-        className={twMerge("input-field", className)}
+        className={twMerge("input-field font-normal", className)}
       />
     </div>
   );
