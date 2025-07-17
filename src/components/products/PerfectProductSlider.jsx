@@ -4,40 +4,7 @@ import { useState } from 'react';
 import { ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 import Link from 'next/link';
 
-const products = [
-  {
-    id: 1,
-    name: 'Love in Layers Combo',
-    price: 295,
-    image: '/products/love-layers.png', // আপনার ইমেজ লিংক বসাবেন
-    link: '/product/love-in-layers',
-  },
-  {
-    id: 2,
-    name: 'Warmth & Wellness',
-    price: 180,
-    image: '/products/warmth.png',
-    link: '/product/warmth-wellness',
-  },
-  {
-    id: 3,
-    name: 'Red Roses & Cake Combo',
-    price: 220,
-    image: '/products/red-roses.png',
-    link: '/product/red-roses-cake',
-  },
-  {
-    id: 4,
-    name: 'Squid Game Cake',
-    price: 130,
-    image: '/products/squid-cake.png',
-    link: '/product/squid-game-cake',
-  },
-];
-
 export default function PerfectProductSlider({ products }) {
-  console.log(products)
-  const [selected, setSelected] = useState(null);
   const [current, setCurrent] = useState(0);
 
   const prev = () => {
@@ -49,67 +16,83 @@ export default function PerfectProductSlider({ products }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-semibold mb-6">The Perfect Picks Await</h2>
-      <p className="text-gray-500 mb-4">Top Trends & Timeless Bestsellers</p>
-
-      <div className="flex gap-4 overflow-x-auto no-scrollbar">
-        {products.map((product, index) => (
-          <div
-            key={product.id}
-            className={`relative border rounded-xl p-4 min-w-[250px] flex-shrink-0 transition-all duration-300 shadow-sm ${
-              index === current ? 'ring-2 ring-primary' : ''
-            }`}
-          >
-            <div className="absolute top-3 left-3 bg-gray-800 text-white text-xs px-2 py-0.5 rounded-full">
-              New Arrival
-            </div>
-
-            <Link href={product.link}>
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-48 object-cover rounded-lg mb-3"
-              />
-            </Link>
-
-            <div className="flex justify-between items-center">
-              <p className="text-lg font-bold">QAR {product.price}</p>
-              <Link href={product.link}>
-                <Eye className="w-5 h-5 text-gray-600 hover:text-primary transition" />
-              </Link>
-            </div>
-
-            <h3 className="text-base mt-2 text-gray-700">{product.name}</h3>
-
-            {/* Navigation Arrows */}
-            {index === current && (
-              <>
-                <button
-                  onClick={prev}
-                  className="absolute top-1/2 -left-3 transform -translate-y-1/2 bg-white p-1.5 rounded-full shadow-md hover:bg-gray-100"
-                >
-                  <ArrowLeft size={16} />
-                </button>
-
-                <button
-                  onClick={next}
-                  className="absolute top-1/2 -right-3 transform -translate-y-1/2 bg-white p-1.5 rounded-full shadow-md hover:bg-gray-100"
-                >
-                  <ArrowRight size={16} />
-                </button>
-              </>
-            )}
-          </div>
-        ))}
+    <div className="w-full px-4 py-10">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">The Perfect Picks Await</h2>
+        <p className="text-gray-500">Top Trends & Timeless Bestsellers</p>
       </div>
 
-      <div className="text-center mt-6">
+      <div className="relative">
+        <div className="flex overflow-x-auto no-scrollbar space-x-4 snap-x snap-mandatory max-w-full">
+          {products.map((product, index) => (
+            <div
+              key={product.id || index}
+              className={`relative bg-white border rounded-xl p-4 flex-shrink-0 snap-center transition-all duration-300 shadow hover:shadow-lg ${
+                index === current ? 'ring-2 ring-olive-500' : ''
+              }`}
+              style={{ width: '250px' }} // Fixed width per card for consistent scroll
+            >
+              <Link href={`/products/${product.handle}`} className="block">
+                <div className="relative group">
+                  <img
+                    src={product.images?.edges[0]?.node.src || '/placeholder.png'}
+                    alt={product.images?.edges[0]?.node.altText || product.title}
+                    className="w-full h-48 object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+                  />
+
+                  <div className="absolute top-2 right-2 bg-white p-1 rounded-full shadow hover:bg-gray-100 transition">
+                    <Eye className="w-5 h-5 text-gray-600" />
+                  </div>
+                </div>
+
+                <h3 className="mt-4 text-sm font-medium text-gray-700 line-clamp-2">{product.title}</h3>
+
+                <p className="text-primary font-semibold mt-2 text-lg">
+                  QAR {product.variants?.edges[0]?.node.price.amount || 'N/A'}
+                </p>
+              </Link>
+
+              {index === current && (
+                <>
+                  <button
+                    onClick={prev}
+                    className="absolute top-1/2 -left-3 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+
+                  <button
+                    onClick={next}
+                    className="absolute top-1/2 -right-3 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination dots */}
+        <div className="flex justify-center mt-4 space-x-2">
+          {products.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrent(idx)}
+              className={`h-2 w-5 rounded-full transition-all duration-300 ${
+                idx === current ? 'bg-olive-500' : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="text-center mt-8">
         <Link
           href="/collections/all"
-          className="px-6 py-2 bg-olive-500 hover:bg-olive-600 text-white rounded-full transition"
+          className="inline-block px-8 py-3 bg-olive-500 hover:bg-olive-600 text-white text-sm rounded-full shadow transition"
         >
-          View All
+          View All Products
         </Link>
       </div>
     </div>

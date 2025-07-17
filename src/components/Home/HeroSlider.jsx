@@ -4,28 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-const slides = [
-  {
-    id: 1,
-    desktopImg: 'https://www.fnp.qa/cdn/shop/files/Artboard_74_copy_6_5.png',
-    mobileImg: 'https://www.fnp.qa/cdn/shop/files/ENGLISH_14.png',
-    link: '/collections/royale-selection'
-  },
-  {
-    id: 2,
-    desktopImg: 'https://www.fnp.qa/cdn/shop/files/Artboard_74_copy_6_4.png',
-    mobileImg: 'https://www.fnp.qa/cdn/shop/files/Artboard_69_copy_6_3.png',
-    link: '/collections/new-arrivals'
-  },
-  {
-    id: 3,
-    desktopImg: 'https://www.fnp.qa/cdn/shop/files/Artboard_74_copy_6_3.png',
-    mobileImg: 'https://www.fnp.qa/cdn/shop/files/ENGLISH_14.png',
-    link: '/collections/best-sellers'
-  }
-];
 
-export default function HeroSlider() {
+export default function HeroSlider({slides}) {
   const [current, setCurrent] = useState(0);
   const [translate, setTranslate] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -90,7 +70,7 @@ export default function HeroSlider() {
           onTouchEnd={handleTouchEnd}
         >
           {slides.map((slide, idx) => (
-            <Link href={slide.link} key={slide.id} className="min-w-full">
+            <Link href="/" key={idx} className="min-w-full">
               <div className="cursor-pointer select-none">
                 <img
                   src={slide.desktopImg}
