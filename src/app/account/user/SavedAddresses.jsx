@@ -1,10 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SectionHeader from "./SectionHeader";
-import { CirclePlus, MoveLeft } from "lucide-react";
+import { CirclePlus, MoveLeft, SquarePen, Trash2 } from "lucide-react";
 import InputField from "@/components/InputField";
 import { countries } from "@/data/countries";
 
+const savedAddressesData = [
+  {
+    firstName: "Abir",
+    lastName: "Hasan",
+    phone: "+8801829328493",
+    address1: "Dhaka, Bangladesh",
+    address2: "Fulbaria, Mymensingh",
+    country: "Bangladesh",
+    city: "Mymensingh",
+    addressLabel: "Home",
+    defaultAddress: true,
+  },
+  {
+    firstName: "Takrim",
+    lastName: "Hasan",
+    phone: "+8801829328345",
+    address1: "Comilla",
+    address2: "Branmanpara, Comilla",
+    country: "Bangladesh",
+    city: "Comilla",
+    addressLabel: "Office",
+    defaultAddress: false,
+  },
+  {
+    firstName: "Junayet",
+    lastName: "Hasan",
+    phone: "+8801829328345",
+    address1: "Rajshahi",
+    address2: "Branmanpara, Rajshahi",
+    country: "Bangladesh",
+    city: "Rajshahi",
+    addressLabel: "Dokan",
+    defaultAddress: false,
+  },
+];
+
 export default function SavedAddresses() {
+  const [addresses, setAddresses] = useState(savedAddressesData || []);
   const [isAddingNew, setIsAddingNew] = useState(false);
 
   return !isAddingNew ? (
@@ -20,17 +57,25 @@ export default function SavedAddresses() {
         </button>
       </div>
 
-      <p className="text-gray-400 mt-5">0 address</p>
-      <h3 className="mt-5 text-gray-600 text-center">
-        You have no addresses saved. Please add an address.
-      </h3>
+      <p className="text-gray-400 mt-5">{addresses.length > 0 ? addresses.length : 0} {addresses.length > 1 ? "addresses" : "address"}</p>
+      {addresses.length > 0 ? (
+        <div className="mt-8 flex flex-col gap-6">
+          {addresses.map((address, idx) => (
+            <AddressCard key={idx} address={address} />
+          ))}
+        </div>
+      ) : (
+        <h3 className="mt-5 text-gray-600 text-center">
+          You have no addresses saved. Please add an address.
+        </h3>
+      )}
     </div>
   ) : (
-    <NewAddressForm onClickBack={setIsAddingNew} />
+    <AddressForm onClickBack={setIsAddingNew} />
   );
 }
 
-const NewAddressForm = ({ onClickBack }) => {
+const AddressForm = ({ onClickBack }) => {
   const [newAddress, setNewAddress] = useState({
     firstName: "",
     lastName: "",
@@ -267,6 +312,52 @@ const NewAddressForm = ({ onClickBack }) => {
           </button>
         </div>
       </form>
+    </div>
+  );
+};
+
+const AddressCard = ({ address }) => {
+
+  const {firstName, lastName, phone, address1, address2, country, city, addressLabel, defaultAddress} = address;
+  const [addressIcon, setAddressIcon] = useState("");
+
+  useEffect(() => {
+    switch (addressLabel) {
+      case "Home":
+        setAddressIcon("🏠")
+        break;
+      case "Office":
+        setAddressIcon("🏢")
+        break;
+    
+      default:
+        setAddressIcon("📍")
+        break;
+    }
+  }, [])
+
+  return (
+    <div className="border border-gray-300 rounded-xl shadow-[0px_0px_4px_1px_rgba(0,0,0,0.1)] p-5">
+      <div className="border-b pb-5 border-b-gray-200 flex items-center justify-between">
+        <div className="flex items-center gap-5">
+          <h2 className="text font-semibold">{addressIcon} {addressLabel}</h2>
+          {defaultAddress && <span className="text-[9px] px-2 py-1.5 rounded-full bg-amber-500/50">Default Address</span>}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button className="text-gray-600 hover:scale-105 duration-200 cursor-pointer"><SquarePen size={17}/></button>
+          <button className="text-red-400 hover:scale-105 duration-200 cursor-pointer"><Trash2 size={17}/></button>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1 mt-2">
+        <h2 className="text-lg font-semibold">{firstName} {lastName}</h2>
+        <p className="text-sm text-gray-500">{address1}</p>
+        <p className="text-sm text-gray-500">{address2}</p>
+        <p className="text-sm text-gray-500">{city}, {country}</p>
+        <p className="font-semibold text-sm text-gray-500">Mobile: {phone}</p>
+      </div>
+
     </div>
   );
 };
