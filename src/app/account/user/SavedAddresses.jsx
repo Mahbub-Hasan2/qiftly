@@ -75,8 +75,8 @@ export default function SavedAddresses() {
   );
 }
 
-const AddressForm = ({ onClickBack }) => {
-  const [newAddress, setNewAddress] = useState({
+const AddressForm = ({ onClickBack, addressData, isEditing }) => {
+  const [newAddress, setNewAddress] = useState(addressData || {
     firstName: "",
     lastName: "",
     phone: "",
@@ -112,7 +112,12 @@ const AddressForm = ({ onClickBack }) => {
     };
 
     console.log(formData);
-    // API request with formData ...
+
+    if (isEditing) {
+      // API request for updating ...
+    }else{
+      // API request for new ...
+    }
   };
 
   return (
@@ -125,13 +130,13 @@ const AddressForm = ({ onClickBack }) => {
           <MoveLeft />
         </button>
         <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-primary md:text-black">
-          Add New Address
+          {isEditing ? "Edit Address" : "Add New Address"}
         </h2>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-5 border border-gray-300 rounded-xl shadow-[0px_0px_4px_1px_rgba(0,0,0,0.1)] mt-6 py-6 px-4"
+        className={`flex flex-col gap-5 border border-gray-300 rounded-xl shadow-[0px_0px_4px_1px_rgba(0,0,0,0.1)] mt-6 ${isEditing ? "px-0 py-0 border-0 shadow-none" : "py-6 px-4"}`}
       >
         {/* first name + last name */}
         <div className="flex gap-5">
@@ -286,6 +291,7 @@ const AddressForm = ({ onClickBack }) => {
           <input
             type="checkbox"
             className="cursor-pointer"
+            defaultChecked={addressData.defaultAddress}
             onChange={(e) => setDefaultAddressChecked(e.target.checked)}
             id="defaultAddress"
           />
@@ -308,7 +314,7 @@ const AddressForm = ({ onClickBack }) => {
             type="submit"
             className="border-primary font-semibold button-primary uppercase flex-1"
           >
-            Save Address
+            {isEditing ? "Update" : "Save"} Address
           </button>
         </div>
       </form>
@@ -320,7 +326,9 @@ const AddressCard = ({ address }) => {
 
   const {firstName, lastName, phone, address1, address2, country, city, addressLabel, defaultAddress} = address;
   const [addressIcon, setAddressIcon] = useState("");
-
+  const [isEditing, setIsEditing] = useState(false);
+  
+  // set address label icon
   useEffect(() => {
     switch (addressLabel) {
       case "Home":
@@ -345,7 +353,7 @@ const AddressCard = ({ address }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="text-gray-600 hover:scale-105 duration-200 cursor-pointer"><SquarePen size={17}/></button>
+          <button onClick={() => setIsEditing(prev => !prev)} className="text-gray-600 hover:scale-105 duration-200 cursor-pointer"><SquarePen size={17}/></button>
           <button className="text-red-400 hover:scale-105 duration-200 cursor-pointer"><Trash2 size={17}/></button>
         </div>
       </div>
@@ -357,6 +365,9 @@ const AddressCard = ({ address }) => {
         <p className="text-sm text-gray-500">{city}, {country}</p>
         <p className="font-semibold text-sm text-gray-500">Mobile: {phone}</p>
       </div>
+
+        {isEditing && <div className="border-t border-t-gray-200 pt-5 mt-5"><AddressForm isEditing={true} onClickBack={() => setIsEditing(false)} addressData={address} /></div>}
+
 
     </div>
   );
