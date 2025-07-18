@@ -1,23 +1,54 @@
-import shopifyFetch from './shopify';
-import { ALL_PRODUCTS_QUERY, HERO_SLIDER_METAOBJECT_QUERY } from './queries';
+// lib/data.js
 
+import shopifyFetch from './shopify';
+import {
+  ALL_PRODUCTS_QUERY,
+  HERO_SLIDER_METAOBJECT_QUERY,
+  ALL_COLLECTIONS_QUERY,
+  COLLECTION_BY_HANDLE_QUERY,
+} from './queries';
+
+/**
+ * Fetch all products
+ */
 export const getAllProducts = async () => {
   const data = await shopifyFetch(ALL_PRODUCTS_QUERY);
   return data.products.edges.map(({ node }) => node);
 };
 
+/**
+ * Fetch all collections for category display
+ */
+export const getAllCollections = async () => {
+  const data = await shopifyFetch(ALL_COLLECTIONS_QUERY);
+  return data.collections.edges.map(({ node }) => node);
+};
 
+/**
+ * Fetch products by collection handle
+ * @param {string} handle - collection handle
+ */
+export const getProductsByCollection = async (handle) => {
+  const variables = { handle };
+  const data = await shopifyFetch(COLLECTION_BY_HANDLE_QUERY, variables);
+  return data.collection?.products?.edges.map(({ node }) => node) || [];
+};
+
+/**
+ * Fetch Hero Slider slides from metaobjects
+ */
 export const getHeroSlides = async () => {
   const data = await shopifyFetch(HERO_SLIDER_METAOBJECT_QUERY);
 
-  const slides = data.metaobjects.edges.map(({ node }) => {
+    console.log(data)
+  return data.metaobjects.edges.map(({ node }) => {
     const slide = {
       link: node.displayName,
       desktopImg: '',
       mobileImg: '',
     };
 
-    node.fields.forEach(field => {
+    node.fields.forEach((field) => {
       if (field.key === 'desktop_image') {
         slide.desktopImg = field.reference?.image?.url || field.value;
       }
@@ -28,6 +59,4 @@ export const getHeroSlides = async () => {
 
     return slide;
   });
-
-  return slides;
 };

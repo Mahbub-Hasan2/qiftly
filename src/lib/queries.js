@@ -1,26 +1,66 @@
-export const ALL_PRODUCTS_QUERY = `
-  {
-    products(first: 10) {
-      edges {
-        node {
-          id
-          title
-          handle
-          description
-          images(first: 1) {
-            edges {
-              node {
-                src
-                altText
-              }
+// lib/queries.js
+
+export const ALL_PRODUCTS_QUERY = `{
+  products(first: 20) {
+    edges {
+      node {
+        id
+        title
+        images(first: 1) {
+          edges {
+            node {
+              url
             }
           }
-          variants(first: 1) {
-            edges {
-              node {
-                price {
-                  amount
+        }
+        priceRange {
+          minVariantPrice {
+            amount
+          }
+        }
+      }
+    }
+  }
+}`;
+
+export const ALL_COLLECTIONS_QUERY = `{
+  collections(first: 10) {
+    edges {
+      node {
+        id
+        handle
+        title
+        image {
+          url
+          altText
+        }
+      }
+    }
+  }
+}`;
+
+export const COLLECTION_BY_HANDLE_QUERY = `
+  query CollectionByHandle($handle: String!) {
+    collection(handle: $handle) {
+      title
+      products(first: 10) {
+        edges {
+          node {
+            id
+            title
+            handle
+            images(first: 1) {
+              edges {
+                node {
+                  url
+                  altText
                 }
+              }
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
               }
             }
           }
@@ -30,10 +70,8 @@ export const ALL_PRODUCTS_QUERY = `
   }
 `;
 
-
-export const HERO_SLIDER_METAOBJECT_QUERY = `
-query HeroSliderSlides {
-  metaobjects(type: "list_of_objects", first: 10) {
+export const HERO_SLIDER_METAOBJECT_QUERY = `{
+  metaobjects(first: 5, type: "list_of_objects") {
     edges {
       node {
         id
@@ -44,7 +82,6 @@ query HeroSliderSlides {
             ... on MediaImage {
               image {
                 url
-                altText
               }
             }
           }
@@ -52,5 +89,4 @@ query HeroSliderSlides {
       }
     }
   }
-}
-`;
+}`;

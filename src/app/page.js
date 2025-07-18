@@ -4,12 +4,15 @@ import HeroSlider from "@/components/Home/HeroSlider";
 import OccasionBasedGifting from "@/components/Home/OccasionBasedGifting";
 import RoomWiseDecor from "@/components/Home/RoomWiseDecor";
 import PerfectProductSlider from "@/components/products/PerfectProductSlider";
-import { getAllProducts, getHeroSlides } from "@/lib/data";
+import { getAllCollections, getAllProducts, getHeroSlides, getProductsByCollection } from "@/lib/data";
 
 
 export default async function Home() {
   const products = await getAllProducts();
   const slides = await getHeroSlides();
+  
+const collections = await getAllCollections();
+const productsByCollection = await getProductsByCollection("cakes");
 
   return (
     <main className="md:p-4 p-1 flex items-center justify-center">
