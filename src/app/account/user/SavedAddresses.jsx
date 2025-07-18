@@ -187,6 +187,7 @@ const AddressForm = ({ onClickBack, addressData, isEditing }) => {
               <input
                 type="text"
                 name="phone"
+                value={addressData.phone}
                 onChange={handleChange}
                 className="input-field border-0 focus:shadow-none focus:outline-0 font-normal"
               />
