@@ -12,7 +12,7 @@
 
 @layer components {
   .input-field {
-    @apply py-2.5 px-3 font-medium rounded-md border focus:outline focus:outline-gray-400 focus:shadow-[0px_0px_3px_rgba(0,0,0,0.4)] border-gray-200 w-full disabled:bg-gray-100 disabled:text-gray-400;
+    @apply py-2.5 px-3 rounded-md border focus:outline focus:outline-gray-400 focus:shadow-[0px_0px_3px_rgba(0,0,0,0.4)] border-gray-200 w-full disabled:bg-gray-100 disabled:text-gray-400;
   }
 
   .button-primary {

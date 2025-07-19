@@ -75,6 +75,8 @@ export default function SavedAddresses() {
   );
 }
 
+
+// Address Form
 const AddressForm = ({ onClickBack, addressData, isEditing }) => {
   const [newAddress, setNewAddress] = useState(addressData || {
     firstName: "",
@@ -187,7 +189,7 @@ const AddressForm = ({ onClickBack, addressData, isEditing }) => {
               <input
                 type="text"
                 name="phone"
-                value={addressData.phone}
+                value={newAddress.phone}
                 onChange={handleChange}
                 className="input-field border-0 focus:shadow-none focus:outline-0 font-normal"
               />
@@ -219,7 +221,7 @@ const AddressForm = ({ onClickBack, addressData, isEditing }) => {
             <select
               name="country"
               onChange={handleChange}
-              value={newAddress.country}
+              value={newAddress.country.toLocaleLowerCase()}
               className="input-field text-sm font-normal"
             >
               {countries.map((country, idx) => (
@@ -292,7 +294,7 @@ const AddressForm = ({ onClickBack, addressData, isEditing }) => {
           <input
             type="checkbox"
             className="cursor-pointer"
-            defaultChecked={addressData.defaultAddress}
+            defaultChecked={newAddress.defaultAddress}
             onChange={(e) => setDefaultAddressChecked(e.target.checked)}
             id="defaultAddress"
           />
