@@ -1,20 +1,24 @@
-const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
-const token = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+// src/lib/shopify.js
 
-export async function shopifyFetch({ query, variables }) {
-  const res = await fetch(`https://${domain}/api/2024-04/graphql.json`, {
+import axios from 'axios';
+
+const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+
+const shopifyFetch = async (query, variables = {}) => {
+  const URL = `https://${domain}/api/2024-04/graphql.json`;
+
+  const result = await axios({
+    url: URL,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': token,
+      'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
     },
-    body: JSON.stringify({ query, variables }),
+    data: JSON.stringify({ query, variables }),
   });
 
-  const { data, errors } = await res.json();
-  if (errors) {
-    console.error(errors);
-    throw new Error('Shopify API error');
-  }
-  return data;
-}
+  return result.data.data;
+};
+
+export default shopifyFetch;
