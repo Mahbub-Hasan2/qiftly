@@ -1,3 +1,5 @@
+import DataLoader from "@/components/common/DataLoader";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
 import CategorySection from "@/components/Home/CategorySection";
 import GiftFinderWizard from "@/components/Home/GiftFinderWizard";
 import HeroSlider from "@/components/Home/HeroSlider";
@@ -8,22 +10,28 @@ import { getAllCollections, getAllProducts, getHeroSlides, getProductsByCollecti
 
 
 export default async function Home() {
-  const products = await getAllProducts();
-  const slides = await getHeroSlides();
-  
-const collections = await getAllCollections();
-const productsByCollection = await getProductsByCollection("cakes");
+  const { products, error: productsError } = await getAllProducts();
+  const { slides, error: slidesError } = await getHeroSlides();
+
+  // const collections = await getAllCollections();
+  // const productsByCollection = await getProductsByCollection("cakes");
 
   return (
-    <main className="md:p-4 p-1 flex items-center justify-center">
-      <div className="w-full max-w-7xl">
-        <HeroSlider slides={slides} />
-        {/* <OccasionBasedGifting /> */}
-        {/* <RoomWiseDecor /> */}
-        <CategorySection />
-        <GiftFinderWizard />
-        <PerfectProductSlider products={products} />
-      </div>
-    </main>
+    <ErrorBoundary>
+      <main className="md:p-4 p-1 flex items-center justify-center">
+        <div className="w-full max-w-7xl">
+          <DataLoader data={slides} error={slidesError}>
+            {(slidesData) => <HeroSlider slides={slidesData} />}
+          </DataLoader>
+          {/* <OccasionBasedGifting /> */}
+          {/* <RoomWiseDecor /> */}
+          <CategorySection />
+          <GiftFinderWizard />
+          <DataLoader data={products} error={productsError}>
+            {(productsData) => <PerfectProductSlider products={productsData} />}
+          </DataLoader>
+        </div>
+      </main>
+    </ErrorBoundary >
   );
 }
