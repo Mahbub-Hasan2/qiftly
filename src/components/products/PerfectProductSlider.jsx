@@ -43,7 +43,7 @@ export default function PerfectProductSlider({ products }) {
   };
 
   return (
-    <div className="relative px-4 py-10">
+    <div className="relative px-1.5 md:px-4 py-10">
       {/* Navigation Arrows */}
       {showLeft && (
         <button
@@ -66,13 +66,15 @@ export default function PerfectProductSlider({ products }) {
       {/* Product Cards Container */}
       <div
         ref={containerRef}
-        className="flex overflow-x-auto scroll-smooth no-scrollbar gap-4"
+        className="flex overflow-x-auto scroll-smooth no-scrollbar md:gap-1 gap-0"
       >
         {products.map((product, idx) => (
           <div
             key={idx}
             className="
               shrink-0
+              px-2
+              md:px-2
               w-1/2        // 2 cards on mobile
               sm:w-1/3     // 3 cards on small tablets
               lg:w-1/4     // 4 cards on laptop and up
