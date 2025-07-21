@@ -1,15 +1,24 @@
 "use client";
 
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import ProductCard from "../cards/ProductCard";
+import { useProductFilter } from "../hooks/useProductFilter";
+import CategoryTabs from "../ui/CategoryTabs";
+import { SliderArrows } from "../ui/SliderArrows";
 
 export default function PerfectProductSlider({ products }) {
   const containerRef = useRef(null);
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(true);
 
-  // Scroll check logic
+  const {
+    categories,
+    activeCategory,
+    setActiveCategory,
+    filteredProducts,
+  } = useProductFilter(products, "productType");
+
+  // Scroll logic
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -20,8 +29,7 @@ export default function PerfectProductSlider({ products }) {
       setShowRight(scrollLeft + clientWidth < scrollWidth - 1);
     };
 
-    checkScroll(); // Initial check
-
+    checkScroll();
     container.addEventListener("scroll", checkScroll);
     window.addEventListener("resize", checkScroll);
 
@@ -29,61 +37,55 @@ export default function PerfectProductSlider({ products }) {
       container.removeEventListener("scroll", checkScroll);
       window.removeEventListener("resize", checkScroll);
     };
-  }, []);
+  }, [filteredProducts]);
 
-  // Scroll trigger
-  const scroll = (direction) => {
+  const scroll = (dir) => {
     const container = containerRef.current;
     if (!container) return;
-
     const cardWidth = container.querySelector("div")?.offsetWidth || 300;
-    const scrollAmount = direction === "left" ? -cardWidth : cardWidth;
-
-    container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    container.scrollBy({ left: dir === "left" ? -cardWidth : cardWidth, behavior: "smooth" });
   };
 
   return (
-    <div className="relative px-1.5 md:px-4 py-10">
-      {/* Navigation Arrows */}
-      {showLeft && (
-        <button
-          onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-white p-2 shadow-md rounded-full"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-      )}
+    <div className="w-full px-4 py-6 relative">
+      {/* Header */}
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">
+          {activeCategory ? activeCategory : "All Products"}
+        </h2>
+        <p className="text-sm text-gray-500">
+          Showing products in category: {activeCategory || "All"}
+        </p>
+      </div>
 
-      {showRight && (
-        <button
-          onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 z-10 -translate-y-1/2 bg-white p-2 shadow-md rounded-full"
-        >
-          <ArrowRight className="w-5 h-5" />
-        </button>
-      )}
+      {/* Category Tabs */}
+      <CategoryTabs
+        categories={categories}
+        activeCategory={activeCategory}
+        onChange={setActiveCategory}
+      />
 
-      {/* Product Cards Container */}
+      {/* Arrows */}
+      <SliderArrows showLeft={showLeft} showRight={showRight} onScroll={scroll} />
+
+      {/* Product Slider */}
       <div
         ref={containerRef}
-        className="flex overflow-x-auto scroll-smooth no-scrollbar md:gap-1 gap-0"
+        className="flex overflow-x-auto scroll-smooth no-scrollbar md:gap-1 gap-0 relative"
+        style={{
+          paddingLeft: showLeft ? "2.5rem" : undefined,
+          paddingRight: showRight ? "2.5rem" : undefined,
+        }}
       >
-        {products.map((product, idx) => (
-          <div
-            key={idx}
-            className="
-              shrink-0
-              px-2
-              md:px-2
-              w-1/2        // 2 cards on mobile
-              sm:w-1/3     // 3 cards on small tablets
-              lg:w-1/4     // 4 cards on laptop and up
-              transition-all
-            "
-          >
-            <ProductCard product={product} />
-          </div>
-        ))}
+        {filteredProducts.length === 0 ? (
+          <p className="text-center w-full py-10 text-gray-500">কোনো প্রোডাক্ট পাওয়া যায়নি।</p>
+        ) : (
+          filteredProducts.map((product, idx) => (
+            <div key={idx} className="shrink-0 px-2 md:px-2 w-1/2 sm:w-1/3 lg:w-1/4 transition-all">
+              <ProductCard product={product} />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

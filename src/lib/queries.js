@@ -1,27 +1,26 @@
 // lib/queries.js
 
 export const ALL_PRODUCTS_QUERY = `{
-  products(first: 20) {
+  products(first: 10) {
     edges {
       node {
         id
         title
+        productType
+        tags
         images(first: 1) {
           edges {
             node {
               url
+              altText
             }
-          }
-        }
-        priceRange {
-          minVariantPrice {
-            amount
           }
         }
       }
     }
   }
-}`;
+}
+`;
 
 export const ALL_COLLECTIONS_QUERY = `{
   collections(first: 10) {
