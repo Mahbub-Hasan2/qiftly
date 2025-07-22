@@ -6,27 +6,31 @@ import { useProductFilter } from "../hooks/useProductFilter";
 import CategoryTabs from "../ui/CategoryTabs";
 import { SliderArrows } from "../ui/SliderArrows";
 
-export default function PerfectProductSlider({ products }) {
+export default function ProductSlider({
+  products = [],
+  defaultCategories = [],
+  title = "Products",
+  subtitle = "",
+  filterKey = "productType",
+  showProductsCategory = true,
+}) {
   const containerRef = useRef(null);
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(true);
-
-   // ✅ Add your default categories here
-  const defaultCategories = [
-    "Birthday",
-    "Anniversary",
-    "Eid",
-    "Graduation"
-  ];
 
   const {
     categories,
     activeCategory,
     setActiveCategory,
     filteredProducts,
-  } = useProductFilter(products, "productType", defaultCategories, false ); // false পেরামিটার এড করলে প্রডাক্ট এ থাকা ক্যাটাগরি গুলো দেখাবে না । আর এটা ইউজ না করলে দেখাবে । 
+  } = useProductFilter(
+    products,
+    filterKey,
+    defaultCategories,
+    showProductsCategory
+  );
 
-  // Scroll logic
+  // Scroll check
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -59,13 +63,10 @@ export default function PerfectProductSlider({ products }) {
       {/* Header */}
       <div className="flex justify-between items-center font-poppins">
         <div className="mb-4">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Gift by Occasion
-          </h2>
-          <p className="text-sm font-semibold text-gray-500">
-            🎉 Celebrate Every Moment 
-            {/* : {activeCategory || "All"} */}
-          </p>
+          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+          {subtitle && (
+            <p className="text-sm font-semibold text-gray-500">{subtitle}</p>
+          )}
         </div>
 
         {/* Category Tabs */}
@@ -74,8 +75,8 @@ export default function PerfectProductSlider({ products }) {
           activeCategory={activeCategory}
           onChange={setActiveCategory}
         />
-
       </div>
+
       {/* Arrows */}
       <SliderArrows showLeft={showLeft} showRight={showRight} onScroll={scroll} />
 
@@ -89,10 +90,15 @@ export default function PerfectProductSlider({ products }) {
         }}
       >
         {filteredProducts.length === 0 ? (
-          <p className="text-center w-full py-10 text-gray-500">কোনো প্রোডাক্ট পাওয়া যায়নি।</p>
+          <p className="text-center w-full py-10 text-gray-500">
+            কোনো প্রোডাক্ট পাওয়া যায়নি।
+          </p>
         ) : (
           filteredProducts.map((product, idx) => (
-            <div key={idx} className="shrink-0 px-2 md:px-2 w-1/2 sm:w-1/3 lg:w-1/4 transition-all">
+            <div
+              key={idx}
+              className="shrink-0 px-2 md:px-2 w-1/2 sm:w-1/3 lg:w-1/4 transition-all"
+            >
               <ProductCard product={product} />
             </div>
           ))

@@ -5,7 +5,7 @@ import GiftFinderWizard from "@/components/Home/GiftFinderWizard";
 import HeroSlider from "@/components/Home/HeroSlider";
 import OccasionBasedGifting from "@/components/Home/OccasionBasedGifting";
 import RoomWiseDecor from "@/components/Home/RoomWiseDecor";
-import PerfectProductSlider from "@/components/products/PerfectProductSlider";
+import ProductsForHome from "@/components/products/ProductsForHome";
 import { getAllCollections, getAllProducts, getHeroSlides, getProductsByCollection } from "@/lib/data";
 
 
@@ -28,7 +28,7 @@ export default async function Home() {
           <CategorySection />
           <GiftFinderWizard />
           <DataLoader data={products} error={productsError}>
-            {(productsData) => <PerfectProductSlider products={productsData} />}
+            {(productsData) => <ProductsForHome products={productsData} />}
           </DataLoader>
         </div>
       </main>
