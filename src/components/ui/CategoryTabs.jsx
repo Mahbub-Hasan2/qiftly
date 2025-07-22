@@ -11,7 +11,7 @@ export default function CategoryTabs({ categories, activeCategory, onChange }) {
         <button
           key={cat}
           onClick={() => onChange(cat)}
-          className={`px-4 py-2 whitespace-nowrap rounded-full text-sm font-medium transition-all ${
+          className={`px-4 py-2 whitespace-nowrap rounded-full text-sm font-medium transition-all cursor-pointer ${
             activeCategory === cat
               ? "bg-yellow-200 text-yellow-800"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"

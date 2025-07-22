@@ -11,12 +11,20 @@ export default function PerfectProductSlider({ products }) {
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(true);
 
+   // ✅ Add your default categories here
+  const defaultCategories = [
+    "Birthday",
+    "Anniversary",
+    "Eid",
+    "Graduation"
+  ];
+
   const {
     categories,
     activeCategory,
     setActiveCategory,
     filteredProducts,
-  } = useProductFilter(products, "productType");
+  } = useProductFilter(products, "productType", defaultCategories, false ); // false পেরামিটার এড করলে প্রডাক্ট এ থাকা ক্যাটাগরি গুলো দেখাবে না । আর এটা ইউজ না করলে দেখাবে । 
 
   // Scroll logic
   useEffect(() => {
@@ -47,24 +55,27 @@ export default function PerfectProductSlider({ products }) {
   };
 
   return (
-    <div className="w-full px-4 py-6 relative">
+    <div className="w-full px-4 py-14 relative">
       {/* Header */}
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">
-          {activeCategory ? activeCategory : "All Products"}
-        </h2>
-        <p className="text-sm text-gray-500">
-          Showing products in category: {activeCategory || "All"}
-        </p>
+      <div className="flex justify-between items-center font-poppins">
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Gift by Occasion
+          </h2>
+          <p className="text-sm font-semibold text-gray-500">
+            🎉 Celebrate Every Moment 
+            {/* : {activeCategory || "All"} */}
+          </p>
+        </div>
+
+        {/* Category Tabs */}
+        <CategoryTabs
+          categories={categories}
+          activeCategory={activeCategory}
+          onChange={setActiveCategory}
+        />
+
       </div>
-
-      {/* Category Tabs */}
-      <CategoryTabs
-        categories={categories}
-        activeCategory={activeCategory}
-        onChange={setActiveCategory}
-      />
-
       {/* Arrows */}
       <SliderArrows showLeft={showLeft} showRight={showRight} onScroll={scroll} />
 
