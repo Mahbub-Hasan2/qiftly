@@ -6,6 +6,7 @@ export const ALL_PRODUCTS_QUERY = `{
       node {
         id
         title
+        handle
         productType
         tags
         images(first: 1) {
@@ -40,34 +41,36 @@ export const ALL_COLLECTIONS_QUERY = `{
 
 export const COLLECTION_BY_HANDLE_QUERY = `
   query CollectionByHandle($handle: String!) {
-    collection(handle: $handle) {
-      title
-      products(first: 10) {
-        edges {
-          node {
-            id
-            title
-            handle
-            images(first: 1) {
-              edges {
-                node {
-                  url
-                  altText
-                }
+  collection(handle: $handle) {
+    title
+    products(first: 10) {
+      edges {
+        node {
+          id
+          title
+          tags
+          images(first: 1) {
+            edges {
+              node {
+                url
+                altText
               }
             }
-            priceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
             }
           }
         }
       }
     }
   }
+}
+
 `;
+
 
 export const HERO_SLIDER_METAOBJECT_QUERY = `{
   metaobjects(first: 5, type: "list_of_objects") {
@@ -89,3 +92,34 @@ export const HERO_SLIDER_METAOBJECT_QUERY = `{
     }
   }
 }`;
+
+
+// lib/queries.js
+
+export const getCollectionWithProductsQuery = `
+  query getCollection($handle: String!) {
+    collectionByHandle(handle: $handle) {
+      title
+      description
+      products(first: 20) {
+        edges {
+          node {
+            id
+            title
+            handle
+            featuredImage {
+              url
+              altText
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

@@ -1,17 +1,34 @@
 import { Eye } from "lucide-react";
 
-export default function ProductCard({ product }) {
-    const { title,  id, images, priceRange } = product;
+export default function ProductCard({ product, activeCategory }) {
+    const { title, id, images, priceRange } = product;
     const imageUrl = images?.edges?.[0]?.node?.url || '/placeholder.png';
     const price = priceRange?.minVariantPrice?.amount;
-
+    console.log(activeCategory, product)
     return (
         <div className="font-poppins snap-start shrink-0 bg-white border-gray-300 border rounded-xl p-2 h-full shadow hover:shadow-lg transition-all relative"
         >
             {/* Badge */}
-            <div className="absolute top-3 left-3 bg-gray-600 text-white text-xs px-2 py-0.5 rounded">
-                New Arrival
-            </div>
+            {(() => {
+                const badges = ["Best Sellers", "New Arrivals"];
+                const matched = badges.find(tag => product?.tags?.includes(tag));
+
+                const displayTag = product?.tags?.includes(activeCategory)
+                    ? activeCategory
+                    : matched;
+
+                if (!displayTag) return null;
+
+                return (
+                    <div
+                        className={`absolute top-3 left-3 text-white text-xs px-2 py-0.5 rounded ${displayTag === "Best Sellers" ? "bg-orange-400" : "bg-gray-600"
+                            }`}
+                    >
+                        {displayTag === "Best Sellers" ? "Top Seller" : "New Arrival"}
+                    </div>
+                );
+            })()}
+
 
             {/* Product Image */}
             <img

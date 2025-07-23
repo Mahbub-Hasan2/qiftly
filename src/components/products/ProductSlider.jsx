@@ -11,8 +11,9 @@ export default function ProductSlider({
   defaultCategories = [],
   title = "Products",
   subtitle = "",
-  filterKey = "productType",
+  filterKey = "tags",
   showProductsCategory = true,
+  initialActiveCategory = "",
 }) {
   const containerRef = useRef(null);
   const [showLeft, setShowLeft] = useState(false);
@@ -27,7 +28,8 @@ export default function ProductSlider({
     products,
     filterKey,
     defaultCategories,
-    showProductsCategory
+    showProductsCategory,
+    initialActiveCategory
   );
 
   // Scroll check
@@ -59,11 +61,11 @@ export default function ProductSlider({
   };
 
   return (
-    <div className="w-full px-4 py-14 relative">
+    <div className="w-full px-0 md:py-10 py-5 relative">
       {/* Header */}
-      <div className="flex justify-between items-center font-poppins">
-        <div className="mb-4">
-          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+      <div className="flex flex-col md:flex-row md:justify-between items-center md:text-start text-center gap-4 font-poppins md:mb-4">
+        <div className="w-full md:w-1/2">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800">{title}</h2>
           {subtitle && (
             <p className="text-sm font-semibold text-gray-500">{subtitle}</p>
           )}
@@ -77,18 +79,15 @@ export default function ProductSlider({
         />
       </div>
 
+
       {/* Arrows */}
       <SliderArrows showLeft={showLeft} showRight={showRight} onScroll={scroll} />
 
       {/* Product Slider */}
       <div
         ref={containerRef}
-        className="flex overflow-x-auto scroll-smooth no-scrollbar md:gap-1 gap-0 relative"
-        style={{
-          paddingLeft: showLeft ? "2.5rem" : undefined,
-          paddingRight: showRight ? "2.5rem" : undefined,
-        }}
-      >
+        className="flex overflow-x-auto scroll-smooth no-scrollbar md:gap-0.5 gap-1 relative" >
+
         {filteredProducts.length === 0 ? (
           <p className="text-center w-full py-10 text-gray-500">
             কোনো প্রোডাক্ট পাওয়া যায়নি।
@@ -97,9 +96,10 @@ export default function ProductSlider({
           filteredProducts.map((product, idx) => (
             <div
               key={idx}
-              className="shrink-0 px-2 md:px-2 w-1/2 sm:w-1/3 lg:w-1/4 transition-all"
+              className={`shrink-0 w-1/2 sm:w-1/3 lg:w-1/4 transition-all ${idx === 0 ? 'pl-0 pr-1.5 md:pr-2' : 'px-1.5 md:px-3'
+                }`}
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} activeCategory={activeCategory} />
             </div>
           ))
         )}

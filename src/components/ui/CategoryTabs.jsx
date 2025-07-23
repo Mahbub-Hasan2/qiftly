@@ -6,12 +6,12 @@ export default function CategoryTabs({ categories, activeCategory, onChange }) {
   }
 
   return (
-    <div className="flex space-x-2 mb-6 overflow-x-auto no-scrollbar">
+    <div className="md:flex space-x-2 md:mb-0 mb-5 md:overflow-x-auto no-scrollbar border border-gray-300 rounded-3xl p-1">
       {categories.map((cat) => (
         <button
           key={cat}
           onClick={() => onChange(cat)}
-          className={`px-4 py-2 whitespace-nowrap rounded-full text-sm font-medium transition-all cursor-pointer ${
+          className={`md:px-4 px-3 md:py-2 md:mb-0 mb-1.5 py-1.5 whitespace-nowrap rounded-full md:text-sm text-xs font-medium transition-all cursor-pointer ${
             activeCategory === cat
               ? "bg-yellow-200 text-yellow-800"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"

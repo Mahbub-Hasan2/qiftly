@@ -4,6 +4,7 @@ import {
   HERO_SLIDER_METAOBJECT_QUERY,
   ALL_COLLECTIONS_QUERY,
   COLLECTION_BY_HANDLE_QUERY,
+  PRODUCTS_BY_NEW_ARRIVALS_QUERY,
 } from './queries';
 
 /**
@@ -21,6 +22,8 @@ export const getAllProducts = async () => {
     return { products: [], error: error.message || 'Unknown error' };
   }
 };
+
+
 
 /**
  * Fetch all collections for category display
@@ -51,12 +54,14 @@ export const getProductsByCollection = async (handle) => {
       return { products: [] };
     }
 
-    return { products: data.collection.products.edges.map(({ node }) => node) };
+    const products = data.collection.products.edges.map(({ node }) => node);
+    return products;
   } catch (error) {
     console.error(`Error fetching products for collection "${handle}":`, error.message || error);
     return { products: [], error: error.message || 'Unknown error' };
   }
 };
+
 
 /**
  * Fetch Hero Slider slides from metaobjects
@@ -91,5 +96,19 @@ export const getHeroSlides = async () => {
   } catch (error) {
     console.error('Error fetching hero slides:', error.message || error);
     return { slides: [], error: error.message || 'Unknown error' };
+  }
+};
+
+
+/**
+ * 👉 Reusable fetch function with error handling
+ */
+const fetchProductsFromCollection = async (collectionHandle) => {
+  try {
+    const products = await getProductsByCollection(collectionHandle);
+    return products;
+  } catch (error) {
+    console.error(`❌ Error fetching products from ${collectionHandle}:`, error);
+    return []; // অথবা null বা undefined, যেটা তোমার UI অনুযায়ী ভালো
   }
 };

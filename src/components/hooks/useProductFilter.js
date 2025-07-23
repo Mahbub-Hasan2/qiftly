@@ -2,29 +2,33 @@ import { useMemo, useState, useEffect } from "react";
 
 export function useProductFilter(
   products,
-  key = "productType",
+  key = "tags", // এখানে আমরা 'tags' ইউজ করব
   defaultCategories = [],
-  showProductsCategory = true // 🆕 default is true
+  showProductsCategory = true,
+  initialActiveCategory = ""
 ) {
   const categories = useMemo(() => {
     const dynamicCats = showProductsCategory
-      ? products?.map((p) => p?.[key]?.trim()).filter(Boolean) || []
+      ? products.flatMap((p) => p?.tags || []) // multiple tags
       : [];
 
     const unique = Array.from(new Set([...dynamicCats, ...defaultCategories]));
     return unique;
-  }, [products, key, defaultCategories, showProductsCategory]);
+  }, [products, defaultCategories, showProductsCategory]);
 
-  const [activeCategory, setActiveCategory] = useState(categories[0] || "");
+  const [activeCategory, setActiveCategory] = useState(initialActiveCategory);
 
   const filteredProducts = useMemo(() => {
     if (!activeCategory) return products || [];
-    return (products || []).filter((p) => p?.[key] === activeCategory);
-  }, [products, key, activeCategory]);
+
+    return (products || []).filter((p) =>
+      p?.tags?.includes(activeCategory)
+    );
+  }, [products, activeCategory]);
 
   useEffect(() => {
     if (!categories.includes(activeCategory)) {
-      setActiveCategory(categories[0] || "");
+      setActiveCategory("");
     }
   }, [categories, activeCategory]);
 
