@@ -5,6 +5,7 @@ import {
   ALL_COLLECTIONS_QUERY,
   COLLECTION_BY_HANDLE_QUERY,
   PRODUCTS_BY_NEW_ARRIVALS_QUERY,
+  OccasionTabs_METAOBJECT_QUERY,
 } from './queries';
 
 /**
@@ -96,6 +97,55 @@ export const getHeroSlides = async () => {
   } catch (error) {
     console.error('Error fetching hero slides:', error.message || error);
     return { slides: [], error: error.message || 'Unknown error' };
+  }
+};
+
+
+
+/**
+ * Fetch Occasion Tabs from metaobjects
+ */
+export const getOccasionTabs = async () => {
+  try {
+    const data = await shopifyFetch(OccasionTabs_METAOBJECT_QUERY);
+
+    const edges = data?.metaobjects?.edges || [];
+
+    if (!edges.length) {
+      throw new Error("No occasion tabs found");
+    }
+
+    const tabsData = edges.map(({ node }) => {
+      const tab = {
+        link: node.displayName || "",
+        img: "",
+        tabs_name: "",
+        collections: "",
+      };
+
+      node.fields?.forEach((field) => {
+        switch (field.key) {
+          case "img":
+            // যদি reference থেকে image.url পাওয়া যায়
+            tab.img = field.reference?.image?.url || field.value || "";
+            break;
+          case "tab_name":
+            tab.tabs_name = field.value || "";
+            break;
+          case "collections":
+            tab.collections = field.value || "";
+            break;
+        }
+      });
+      return tab;
+    });
+    return { tabsData };
+  } catch (error) {
+    console.error("Error fetching occasion tabs:", error.message || error);
+    return {
+      tabsData: [],
+      error: error.message || "Unknown error occurred",
+    };
   }
 };
 

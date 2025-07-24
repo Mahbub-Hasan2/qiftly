@@ -3,7 +3,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['i.ebayimg.com', 'www.fnp.qa'], // যেখান থেকে ইমেজ লোড করবেন সেটা এখানে যুক্ত করতে হবে
+    domains: ['i.ebayimg.com', 'www.fnp.qa', 'cdn.shopify.com'], // যেখান থেকে ইমেজ লোড করবেন সেটা এখানে যুক্ত করতে হবে
   },
 };
 

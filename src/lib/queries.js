@@ -93,6 +93,30 @@ export const HERO_SLIDER_METAOBJECT_QUERY = `{
   }
 }`;
 
+export const OccasionTabs_METAOBJECT_QUERY = `{
+  metaobjects(first: 5, type: "gifts_for_every_occasion_tabs") {
+    edges {
+      node {
+        id
+        type
+        
+        fields {
+          key
+          value
+          reference {
+            ... on MediaImage {
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`;
+
+
 
 // lib/queries.js
 

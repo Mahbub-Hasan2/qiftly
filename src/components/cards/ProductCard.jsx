@@ -4,7 +4,7 @@ export default function ProductCard({ product, activeCategory }) {
     const { title, id, images, priceRange } = product;
     const imageUrl = images?.edges?.[0]?.node?.url || '/placeholder.png';
     const price = priceRange?.minVariantPrice?.amount;
-    console.log(activeCategory, product)
+    
     return (
         <div className="font-poppins snap-start shrink-0 bg-white border-gray-300 border rounded-xl p-2 h-full shadow hover:shadow-lg transition-all relative"
         >

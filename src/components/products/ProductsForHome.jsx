@@ -8,8 +8,6 @@ export default async function ProductsForHome() {
     const WallFramesAndIslamicArt = await getProductsByCollection("wall-frames-islamic-art");
     const MugAndBoxSets = await getProductsByCollection("mug-box-sets");
 
-    console.log(WallFramesAndIslamicArt)
-
     return (
         <div className="">
             <ProductSlider

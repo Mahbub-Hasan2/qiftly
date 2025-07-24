@@ -6,13 +6,14 @@ import HeroSlider from "@/components/Home/HeroSlider";
 import OccasionBasedGifting from "@/components/Home/OccasionBasedGifting";
 import RoomWiseDecor from "@/components/Home/RoomWiseDecor";
 import ProductsForHome from "@/components/products/ProductsForHome";
-import { getAllCollections, getAllProducts, getHeroSlides, getProductsByCollection } from "@/lib/data";
+import { getAllCollections, getAllProducts, getHeroSlides, getOccasionTabs, getProductsByCollection } from "@/lib/data";
 
 
 export default async function Home() {
   const { products, error: productsError } = await getAllProducts();
   const { slides, error: slidesError } = await getHeroSlides();
-
+  const { tabsData, error: tabsError } = await getOccasionTabs();
+console.log(tabsData)
   // const collections = await getAllCollections();
   // const productsByCollection = await getProductsByCollection("cakes");
 
@@ -25,7 +26,9 @@ export default async function Home() {
           </DataLoader>
           {/* <OccasionBasedGifting /> */}
           {/* <RoomWiseDecor /> */}
-          <CategorySection />
+          <DataLoader data={tabsData} error={tabsError}>
+            {(tab) => <CategorySection tabs={tab} title="Gifts for Every Occasion" />}
+          </DataLoader>
           <GiftFinderWizard />
           <DataLoader data={products} error={productsError}>
             {(productsData) => <ProductsForHome products={productsData} />}
