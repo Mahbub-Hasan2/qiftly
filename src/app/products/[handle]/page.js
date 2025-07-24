@@ -14,13 +14,19 @@ export default async function ProductPage({ params }) {
   const product = await getProductByHandle(params.handle);
   if (!product) return notFound();
 
+  const { products: allProducts } = await getAllProducts();
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div className="max-w-6xl mx-auto px-4 py-5 md:py-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-10">
         <ProductGallery product={product} />
         <ProductInfo product={product} />
       </div>
-      <YouMayAlsoLike />
+      <YouMayAlsoLike
+        currentProduct={product}
+        allProducts={allProducts}
+      />
     </div>
   );
 }
+

@@ -172,6 +172,25 @@ export const PRODUCT_QUERY = `
           currencyCode
         }
       }
+      availableForSale
+      totalInventory
+      variants(first: 10) {
+        edges {
+          node {
+            id
+            title
+            sku
+            weight
+            weightUnit
+            availableForSale
+            quantityAvailable
+            selectedOptions {
+              name
+              value
+            }
+          }
+        }
+      }
     }
   }
 `;

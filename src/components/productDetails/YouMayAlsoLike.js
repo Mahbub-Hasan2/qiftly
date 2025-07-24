@@ -1,27 +1,31 @@
-// components/YouMayAlsoLike.js
-import Image from "next/image";
+"use client";
+import ProductCard from "../cards/ProductCard";
+import { useProductFilter } from "../hooks/useProductFilter";
 
-export default function YouMayAlsoLike() {
+export default function YouMayAlsoLike({ currentProduct, allProducts }) {
+  const currentTags = currentProduct?.tags || [];
+
+  // একই প্রোডাক্ট যেন না আসে
+  const otherProducts = allProducts.filter(
+    (p) => p.handle !== currentProduct.handle
+  );
+
+  const { filteredProducts } = useProductFilter(
+    otherProducts,
+    "tags",
+    currentTags,
+    false,
+    currentTags[0] || ""
+  );
+
+  if (filteredProducts.length === 0) return null;
+
   return (
     <div className="mt-16">
-      <h2 className="text-xl font-semibold mb-6">You’ll Love These</h2>
+      <h2 className="text-xl font-semibold mb-6">You May Also Like</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map((item) => (
-          <div key={item} className="border rounded-lg p-3 hover:shadow-md transition-all">
-            <Image
-              src="/placeholder.jpg"
-              alt={`Suggested Product ${item}`}
-              width={300}
-              height={300}
-              className="w-full h-40 object-cover rounded"
-            />
-            <div className="mt-2">
-              <h3 className="font-semibold text-gray-700 text-sm">
-                Product Title {item}
-              </h3>
-              <p className="text-green-600 font-bold text-sm">QAR 180</p>
-            </div>
-          </div>
+        {filteredProducts.slice(0, 4).map((product) => (
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>
