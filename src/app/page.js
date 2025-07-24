@@ -13,7 +13,6 @@ export default async function Home() {
   const { products, error: productsError } = await getAllProducts();
   const { slides, error: slidesError } = await getHeroSlides();
   const { tabsData, error: tabsError } = await getOccasionTabs();
-console.log(tabsData)
   // const collections = await getAllCollections();
   // const productsByCollection = await getProductsByCollection("cakes");
 
@@ -29,7 +28,7 @@ console.log(tabsData)
           <DataLoader data={tabsData} error={tabsError}>
             {(tab) => <CategorySection tabs={tab} title="Gifts for Every Occasion" />}
           </DataLoader>
-          <GiftFinderWizard />
+          {/* <GiftFinderWizard /> */}
           <DataLoader data={products} error={productsError}>
             {(productsData) => <ProductsForHome products={productsData} />}
           </DataLoader>

@@ -6,6 +6,7 @@ import {
   COLLECTION_BY_HANDLE_QUERY,
   PRODUCTS_BY_NEW_ARRIVALS_QUERY,
   OccasionTabs_METAOBJECT_QUERY,
+  PRODUCT_QUERY,
 } from './queries';
 
 /**
@@ -151,14 +152,22 @@ export const getOccasionTabs = async () => {
 
 
 /**
- * 👉 Reusable fetch function with error handling
+ * 👉 product details
  */
-const fetchProductsFromCollection = async (collectionHandle) => {
+
+// lib/data.js
+export async function getProductByHandle(handle) {
   try {
-    const products = await getProductsByCollection(collectionHandle);
-    return products;
+    const variables = { handle };
+    const data = await shopifyFetch(PRODUCT_QUERY, variables);
+
+    if (!data?.product) {
+      return null;
+    }
+
+    return data.product;
   } catch (error) {
-    console.error(`❌ Error fetching products from ${collectionHandle}:`, error);
-    return []; // অথবা null বা undefined, যেটা তোমার UI অনুযায়ী ভালো
+    console.error("Error fetching product by handle:", error.message || error);
+    return null;
   }
-};
+}

@@ -48,6 +48,7 @@ export const COLLECTION_BY_HANDLE_QUERY = `
         node {
           id
           title
+          handle
           tags
           images(first: 1) {
             edges {
@@ -142,6 +143,33 @@ export const getCollectionWithProductsQuery = `
               }
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+
+export const PRODUCT_QUERY = `
+  query ProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      id
+      title
+      description
+      handle
+      tags
+      images(first: 5) {
+        edges {
+          node {
+            url
+            altText
+          }
+        }
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
         }
       }
     }

@@ -104,6 +104,12 @@ export default function ProductSlider({
           ))
         )}
       </div>
+      {/* <div className="flex items-center justify-center my-4">
+        <div className="border-t border-gray-300 w-1/4" />
+        <span className="mx-2 text-sm text-gray-400">Explore More</span>
+        <div className="border-t border-gray-300 w-1/4" />
+      </div> */}
+
     </div>
   );
 }
