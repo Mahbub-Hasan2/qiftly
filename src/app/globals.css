@@ -1,24 +1,33 @@
 @import "tailwindcss";
 
+/* ==== Custom Theme Variables ==== */
 @theme {
   --font-poppins: "Poppins", sans-serif;
+   --font-roboto: 'Roboto', sans-serif;
   --breakpoint-3xl: 120rem;
-}
-
-@theme {
   --color-primary: oklch(0.5802 0.0993 111.9);
   --color-secondary: oklch(0.7979 0.1536 88.04);
 }
 
+/* ==== Custom Components ==== */
 @layer components {
   .input-field {
-    @apply py-2.5 px-3 rounded-md border focus:outline focus:outline-gray-400 focus:shadow-[0px_0px_3px_rgba(0,0,0,0.4)] border-gray-200 w-full disabled:bg-gray-100 disabled:text-gray-400;
+    @apply w-full py-2.5 px-3 rounded-md border border-gray-200 
+           focus:outline focus:outline-gray-400 
+           focus:shadow-[0px_0px_3px_rgba(0,0,0,0.4)]
+           disabled:bg-gray-100 disabled:text-gray-400;
   }
 
   .button-primary {
-    @apply  flex items-center justify-center gap-2 bg-primary px-4 py-2 rounded-md text-white hover:scale-102 active:scale-95 duration-200 cursor-pointer;
+    @apply flex items-center justify-center gap-2 
+           bg-primary text-white 
+           px-4 py-2 rounded-md 
+           hover:scale-102 active:scale-95 
+           duration-200 cursor-pointer;
   }
 }
+
+/* ==== Utilities ==== */
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
@@ -27,6 +36,6 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
 }

@@ -43,7 +43,7 @@ export default function ProductCard({ product, activeCategory }) {
                     <h4 className="font-bold text-gray-900">
                         QAR {price}
                     </h4>
-                    <h3 className="text-sm md:font-medium mt-1 line-clamp-2 text-gray-800">{product.title}</h3>
+                    <h3 className="text-sm md:font-medium mt-1 line-clamp-2 text-gray-800 font-roboto">{product.title}</h3>
                 </div>
             </Link>
 
