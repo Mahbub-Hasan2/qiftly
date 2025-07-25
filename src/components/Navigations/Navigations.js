@@ -2,10 +2,10 @@
 
 import Navbar from "./Navbar";
 
-export default function Navigations() {
+export default function Navigations({menuItems}) {
     return (
         <div>
-            <Navbar/>
+            <Navbar menuItems={menuItems}/>
         </div>
     )
 }

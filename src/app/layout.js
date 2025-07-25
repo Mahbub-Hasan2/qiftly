@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import BottomNav from "@/components/Navigations/BottomNav";
 import { UIProvider } from "@/components/contexts/UIContext";
 import { Poppins, Roboto } from "next/font/google";
+import { getNavigationMenu } from "@/lib/data";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -24,7 +25,8 @@ export async function generateMetadata() {
 }
 
 
-export default function RootLayout({ children }) {
+export default  async function RootLayout({ children }) {
+    const menuItems = await getNavigationMenu("main-menu");
   return (
     <html lang="en">
       <body
@@ -32,7 +34,7 @@ export default function RootLayout({ children }) {
         className={`${poppins.className} ${roboto.className} antialiased`}
       >
         <UIProvider>
-          <Navigations />
+          <Navigations menuItems={menuItems} />
           {children}
           <Footer />
           <BottomNav />

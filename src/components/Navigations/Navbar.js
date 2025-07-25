@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useUI } from '../contexts/UIContext';
 
-export default function Navbar() {
+export default function Navbar({menuItems}) {
     const { isMobileSearch, setIsMobileSearch, isFocused, setIsFocused } = useUI();
 
     return (
@@ -53,7 +53,7 @@ export default function Navbar() {
 
             {/* Mega Menu - only on desktop */}
             <div className="hidden lg:block">
-                <MegaMenu />
+                <MegaMenu menuItems={menuItems} />
             </div>
         </nav>
     );

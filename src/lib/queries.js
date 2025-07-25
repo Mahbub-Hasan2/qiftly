@@ -195,3 +195,30 @@ export const PRODUCT_QUERY = `
     }
   }
 `;
+
+
+
+export const NAVIGATION_QUERY = `
+query GetMainMenu {
+  menu(handle: "main-menu") {
+    title
+    items {
+      id
+      title
+      url
+      type
+      tags
+      items {
+        id
+        title
+        url
+        type
+        tags
+      }
+    }
+  }
+}
+
+`;
+
+

@@ -7,6 +7,7 @@ import {
   PRODUCTS_BY_NEW_ARRIVALS_QUERY,
   OccasionTabs_METAOBJECT_QUERY,
   PRODUCT_QUERY,
+  NAVIGATION_QUERY,
 } from './queries';
 
 /**
@@ -171,3 +172,34 @@ export async function getProductByHandle(handle) {
     return null;
   }
 }
+
+
+  
+export const getNavigationMenu = async () => {
+  try {
+    const data = await shopifyFetch(NAVIGATION_QUERY);
+    const menu = data?.menu;
+
+    if (!menu || !menu.items) return [];
+
+    const menuItems = menu.items.map((item) => ({
+      id: item.id,
+      label: item.title,
+      url: item.url,
+      type: item.type,
+      tags: item.tags || [],
+      children: item.items?.map((child) => ({
+        id: child.id,
+        label: child.title,
+        url: child.url,
+        type: child.type,
+        tags: child.tags || [],
+      })) || [],
+    }));
+
+    return menuItems;
+  } catch (err) {
+    console.error("Failed to fetch navigation menu:", err.message || err);
+    return [];
+  }
+};
