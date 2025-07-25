@@ -7,7 +7,6 @@ export default async function ProductsForHome() {
     const NewArrivalsAndBestSelling  = await getProductsByCollection("new-arrivals-and-best-selling");
     const WallFramesAndIslamicArt = await getProductsByCollection("wall-frames-islamic-art");
     const MugAndBoxSets = await getProductsByCollection("mug-box-sets");
-console.log(MugAndBoxSets)
 
     return (
         <div className="">

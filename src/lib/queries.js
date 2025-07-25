@@ -156,6 +156,7 @@ export const PRODUCT_QUERY = `
       id
       title
       description
+      descriptionHtml
       handle
       tags
       images(first: 5) {

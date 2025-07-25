@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import MegaMenu from './MegaMenu';
 import SearchInput from './SearchInput';
 import HeaderIcons from './HeaderIcons';

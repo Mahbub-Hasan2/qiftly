@@ -15,11 +15,14 @@ const roboto = Roboto({
   weight: ["400", "500", "700"],
 });
 
-export const metadata = {
-  title: "Order Gifts In Qatar | Online Gift Shop - Qiftly QA",
-  description:
-    "Buy gifts online. Explore the Qiftly online gift shop in Qatar for unique and trending gifts options with midnight and same day delivery options. Shop Now!",
-};
+export async function generateMetadata() {
+  return {
+    title: "Order Gifts In Qatar | Online Gift Shop - Qiftly QA",
+    description:
+      "Buy gifts online. Explore the Qiftly online gift shop in Qatar for unique and trending gifts options with midnight and same day delivery options. Shop Now!",
+  };
+}
+
 
 export default function RootLayout({ children }) {
   return (
