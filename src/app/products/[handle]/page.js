@@ -5,6 +5,29 @@ import YouMayAlsoLike from "@/components/productDetails/YouMayAlsoLike";
 import { getAllProducts, getProductByHandle } from "@/lib/data";
 import { notFound } from "next/navigation";
 
+// 👇 এটাকে তোমার page.js এর উপরে রাখো
+export async function generateMetadata({ params }) {
+  const product = await getProductByHandle(params.handle);
+
+  if (!product) {
+    return {
+      title: "Product Not Found | Qiftly",
+      description: "Sorry, this product does not exist.",
+    };
+  }
+
+  return {
+    title: `${product.title} | Qiftly`,
+    description: product.description?.slice(0, 150) || "Premium gift & home decor.",
+    openGraph: {
+      title: product.title,
+      description: product.description,
+      images: [product.images?.edges?.[0]?.node?.url || "/default.jpg"],
+    },
+  };
+}
+
+
 export async function generateStaticParams() {
   const { products } = await getAllProducts();
   return products.map((p) => ({ handle: p.handle }));
