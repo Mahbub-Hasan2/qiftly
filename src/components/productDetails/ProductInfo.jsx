@@ -1,7 +1,12 @@
 // components/ProductInfo.js
 import { BadgeCheck } from "lucide-react";
+import { useUI } from "../contexts/UIContext";
+import CartSidebar from "../products/CartSidebar";
+import ClientWrapper from "../products/ClientWrapper";
+import CartClient from "../products/CartClient";
 
 export default function ProductInfo({ product }) {
+
   const { title, priceRange, tags, availableForSale, totalInventory } = product;
   const { amount, currencyCode } = priceRange?.minVariantPrice || {};
 
@@ -40,12 +45,8 @@ export default function ProductInfo({ product }) {
         )}
       </div>
 
-      {/* Add to Cart */}
-      <div>
-        <button className="w-full bg-primary hover:bg-primary text-white text-base font-medium px-6 py-3 rounded-lg shadow-md transition-all">
-          Add to Cart
-        </button>
-      </div>
+      {/* Add to Cart Client Component */}
+      <ClientWrapper product={product} />
 
       <div className="rounded-2xl border border-gray-100 p-5">
         <h3 className="md:block hidden font-poppins font-bold mb-3 text-base md:text-lg">Ways to pay:</h3>
@@ -60,7 +61,6 @@ export default function ProductInfo({ product }) {
           <img className="h-8 md:h-10" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/COD_Icon_34c5679d-9814-49a7-af5e-2c5680f57642.avif?v=1753425634" alt="Cash on Delivery" />
         </div>
       </div>
-
     </div>
   );
 }

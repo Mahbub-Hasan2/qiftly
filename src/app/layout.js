@@ -5,6 +5,7 @@ import BottomNav from "@/components/Navigations/BottomNav";
 import { UIProvider } from "@/components/contexts/UIContext";
 import { Poppins, Roboto } from "next/font/google";
 import { getNavigationMenu } from "@/lib/data";
+import { CartProvider } from "@/components/contexts/CartContext";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,21 +26,23 @@ export async function generateMetadata() {
 }
 
 
-export default  async function RootLayout({ children }) {
-    const menuItems = await getNavigationMenu("main-menu");
+export default async function RootLayout({ children }) {
+  const menuItems = await getNavigationMenu("main-menu");
   return (
     <html lang="en">
       <body
         suppressHydrationWarning
         className={`${poppins.className} ${roboto.className} antialiased`}
       >
-        <UIProvider>
-          <Navigations menuItems={menuItems} />
-          {children}
-          <Footer />
-          <BottomNav />
-          <div id="modal-root"></div>
-        </UIProvider>
+        <CartProvider>
+          <UIProvider>
+            <Navigations menuItems={menuItems} />
+            {children}
+            <Footer />
+            <BottomNav />
+            <div id="modal-root"></div>
+          </UIProvider>
+        </CartProvider>
       </body>
     </html>
   );
