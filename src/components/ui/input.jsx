@@ -7,7 +7,8 @@ export const Input = ({
   className = "",
   value,
   onChange,
-  defaultValue, // এটা ইনপুটে না পাঠিয়ে কেবল লোকাল স্টেটে ব্যবহৃত হবে
+  defaultValue,
+  error, // ✅ নতুন প্রপস
   ...props
 }) => {
   const isControlled = value !== undefined;
@@ -33,19 +34,23 @@ export const Input = ({
         onBlur={() => setIsFocused(false)}
         onChange={handleChange}
         value={currentValue}
-        placeholder=" " // যাতে লেবেল ইনপুটের ভিতরে float করে
-        className={`peer w-full border border-gray-300 rounded-lg px-3 pt-5 pb-2 text-sm text-gray-900 focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none transition-all duration-200 ${className}`}
+        placeholder=" "
+        className={`peer w-full border rounded-lg px-3 pt-5 pb-2 text-sm text-gray-900 focus:outline-none transition-all duration-200
+          ${error ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300 focus:ring-primary focus:border-primary"} 
+          ${className}`}
         {...props}
       />
       <label
-        className={`absolute left-3 px-1 bg-white transition-all duration-200 pointer-events-none ${
-          shouldFloat
-            ? "top-1 text-xs text-primary"
-            : "top-3.5 text-sm text-gray-400"
-        }`}
+        className={`absolute left-3 px-1 bg-white transition-all duration-200 pointer-events-none
+          ${shouldFloat ? "top-1 text-xs" : "top-3.5 text-sm"}
+          ${error ? "text-red-500" : shouldFloat ? "text-primary" : "text-gray-400"}`}
       >
         {labelText}
       </label>
+
+      {error && (
+        <p className="mt-1 text-sm text-red-600">{error}</p>
+      )}
     </div>
   );
 };

@@ -1,101 +1,155 @@
-// components/PaymentBillingSection.jsx
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
-export default function PaymentBillingSection() {
-    const [billingOption, setBillingOption] = useState("same");
+export default function PaymentBillingSection({
+  billingOption,
+  setBillingOption,
+  billingData,
+  setBillingData,
+  paymentMethod,
+  setPaymentMethod,
+  errors,
+  handleBillingChange,
+  fieldRefs,
+}) {
+  return (
+    <div className="space-y-6 text-sm">
+      {/* Payment Option */}
+      <div className="border border-gray-200 rounded-xl p-4 space-y-2">
+        <h2 className="text-base font-semibold">Payment</h2>
 
-    return (
-        <div className="space-y-6 text-sm">
-            {/* Payment Method */}
-            <div className="space-y-2 border border-gray-200 rounded-xl p-4">
-                <h2 className="text-base font-semibold">Payment</h2>
-
-                <div className="space-y-2">
-                    <label className="flex items-start gap-2">
-                        <input type="radio" name="payment" defaultChecked />
-                        <div className="space-y-1 ">
-                            <div className="flex gap-4">
-                                <p className="font-normal">Pay by Debit/ Credit Card/ Apple Pay/ Google Pay/ NAPS</p>
-                                <div className="flex flex-wrap items-center gap-2">
-                                    <img className="h-8 md:h-8" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/mastercard_95b29551-18c2-48dc-99b8-2fca8a8f96a3.avif?v=1753425634" alt="Mastercard" />
-                                    <img className="h-8 md:h-8" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/visa_5badd0b9-dbaf-4a2d-a7b0-eb88cb755c3d.avif?v=1753425634" alt="Visa" />
-                                    <img className="h-8 md:h-8" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/apple-pay_ca03f924-a38d-40f6-8d1b-77cb18f97daf.webp?v=1753425634" alt="Apple Pay" />
-                                    <img className="h-8 md:h-8" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/naps_41c4c8ba-377a-4ea9-b9f2-eaceb40c4d3e.webp?v=1753425634" alt="NAPS" />
-                                    <img className="h-8 md:h-8" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/gpay_c6643f18-fc38-4ed1-964e-abb6e8420b3f.avif?v=1753425634" alt="GPay" />
-                                    <img className="h-8 md:h-8" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/amex.avif?v=1753425633" alt="AMEX" />
-                                    {/* <img className="h-8 md:h-8" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/COD_Icon_34c5679d-9814-49a7-af5e-2c5680f57642.avif?v=1753425634" alt="Cash on Delivery" /> */}
-                                </div>
-                            </div>
-                            <p className="text-gray-600">
-                                After clicking “Pay now”, you will be redirected to complete your purchase securely.
-                            </p>
-                        </div>
-                    </label>
-
-                    <label className="flex items-center gap-2">
-                        <input type="radio" name="payment" />
-                        <span>Cash on Delivery (COD)</span>
-                    </label>
-                </div>
+        <label className="flex items-start gap-2">
+          <input
+            type="radio"
+            name="payment"
+            checked={paymentMethod === "card"}
+            onChange={() => setPaymentMethod("card")}
+          />
+          <div>
+            <p className="font-normal">
+              Pay by Card / Apple Pay / Google Pay / NAPS
+            </p>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <img className="h-6" src="/icons/visa.svg" alt="Visa" />
+              <img className="h-6" src="/icons/mastercard.svg" alt="Mastercard" />
+              <img className="h-6" src="/icons/apple-pay.svg" alt="Apple Pay" />
             </div>
+          </div>
+        </label>
 
-            {/* Billing Address */}
-            <div className="space-y-2 border border-gray-200 rounded-xl p-4">
-                <h2 className="text-base font-semibold">Billing address</h2>
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="payment"
+            checked={paymentMethod === "cod"}
+            onChange={() => setPaymentMethod("cod")}
+          />
+          <span>Cash on Delivery (COD)</span>
+        </label>
+      </div>
 
-                <div className="space-y-2">
-                    <label className="flex items-center gap-2">
-                        <input
-                            type="radio"
-                            name="billing"
-                            value="same"
-                            checked={billingOption === "same"}
-                            onChange={() => setBillingOption("same")}
-                        />
-                        <span>Same as shipping address</span>
-                    </label>
+      {/* Billing Address */}
+      <div className="border border-gray-200 rounded-xl p-4 space-y-2">
+        <h2 className="text-base font-semibold">Billing address</h2>
 
-                    <label className="flex items-center gap-2">
-                        <input
-                            type="radio"
-                            name="billing"
-                            value="different"
-                            checked={billingOption === "different"}
-                            onChange={() => setBillingOption("different")}
-                        />
-                        <span>Use a different billing address</span>
-                    </label>
-                </div>
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="billing"
+            value="same"
+            checked={billingOption === "same"}
+            onChange={() => setBillingOption("same")}
+          />
+          <span>Same as shipping address</span>
+        </label>
 
-                {billingOption === "different" && (
-                    <div className="mt-4 space-y-3">
-                        <Select>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Country/Region" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="qatar">Qatar</SelectItem>
-                            </SelectContent>
-                        </Select>
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="billing"
+            value="different"
+            checked={billingOption === "different"}
+            onChange={() => setBillingOption("different")}
+          />
+          <span>Use a different billing address</span>
+        </label>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Input placeholder="First name" />
-                            <Input placeholder="Last name" />
-                        </div>
-                        <Input placeholder="Address" />
-                        <Input placeholder="Apartment, suite, etc. (optional)" />
-                        <Input placeholder="City" />
-                        <Input placeholder="Phone (optional)" />
-                    </div>
-                )}
+        {billingOption === "different" && (
+          <div className="mt-4 space-y-3">
+            <Select
+              value={billingData.country}
+              onValueChange={(val) =>
+                setBillingData((prev) => ({ ...prev, country: val }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a country" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Bangladesh">Bangladesh</SelectItem>
+                <SelectItem value="Qatar">Qatar</SelectItem>
+                <SelectItem value="UAE">UAE</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                ref={fieldRefs.billingFirstName}
+                placeholder="First name"
+                name="firstName"
+                value={billingData.firstName || ""}
+                onChange={handleBillingChange}
+                error={errors.billingFirstName}
+              />
+              <Input
+                ref={fieldRefs.billingLastName}
+                placeholder="Last name"
+                name="lastName"
+                value={billingData.lastName || ""}
+                onChange={handleBillingChange}
+                error={errors.billingLastName}
+              />
             </div>
-
-            <Button className="w-full bg-[#a4a044] text-white text-sm py-2 rounded-md">Pay now</Button>
-        </div>
-    );
+            <Input
+              ref={fieldRefs.billingAddress}
+              placeholder="Address"
+              name="address"
+              value={billingData.address || ""}
+              onChange={handleBillingChange}
+              error={errors.billingAddress}
+            />
+            <Input
+              placeholder="Apartment, suite, etc."
+              name="apartment"
+              value={billingData.apartment || ""}
+              onChange={handleBillingChange}
+            />
+            <Input
+              placeholder="City"
+              name="city"
+              value={billingData.city || ""}
+              onChange={handleBillingChange}
+            />
+            <Input
+              ref={fieldRefs.billingPhone}
+              placeholder="Phone"
+              name="phone"
+              value={billingData.phone || ""}
+              onChange={handleBillingChange}
+              error={errors.billingPhone}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

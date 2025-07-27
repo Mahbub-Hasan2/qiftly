@@ -1,16 +1,51 @@
-// src/components/ui/select.jsx
-
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
-export function Select({ children, ...props }) {
-  return (
-    <div {...props} className="relative w-full">
-      {children}
-    </div>
-  );
+export function Select({ children, onValueChange }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
+
+  const handleSelect = (value) => {
+    setSelectedValue(value);
+    setIsOpen(false);
+    if (onValueChange) onValueChange(value); // ✅ trigger parent handler
+  };
+
+  // pass `handleSelect` and `selectedValue` to children
+  const clonedChildren = React.Children.map(children, (child) => {
+    if (!child) return null;
+
+    // inject props into SelectItem and SelectTrigger
+    if (child.type === SelectTrigger) {
+      return React.cloneElement(child, {
+        onClick: () => setIsOpen((prev) => !prev),
+        value: selectedValue,
+      });
+    }
+
+    if (child.type === SelectContent) {
+      const contentChildren = React.Children.map(child.props.children, (subChild) => {
+        if (subChild.type === SelectItem) {
+          return React.cloneElement(subChild, {
+            onSelect: () => handleSelect(subChild.props.value),
+          });
+        }
+        return subChild;
+      });
+
+      return React.cloneElement(child, {
+        isOpen,
+        children: contentChildren,
+      });
+    }
+
+    return child;
+  });
+
+  return <div className="relative w-full">{clonedChildren}</div>;
 }
+
 
 export function SelectTrigger({ onClick, children }) {
   return (
@@ -36,10 +71,10 @@ export function SelectContent({ isOpen, children }) {
   );
 }
 
-export function SelectItem({ children, onSelect }) {
+export function SelectItem({ children, onSelect, value }) {
   return (
     <div
-      onClick={onSelect}
+      onClick={() => onSelect?.(value)}
       className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
     >
       {children}
