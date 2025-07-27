@@ -17,7 +17,7 @@ export default function CartClient({ product }) {
     <>
       <div>
         <button
-          className="w-full bg-primary hover:bg-primary text-white text-base font-medium px-6 py-3 rounded-lg shadow-md transition-all"
+          className="cursor-pointer w-full bg-primary hover:bg-primary text-white text-base font-medium px-6 py-3 rounded-lg shadow-md transition-all"
           onClick={handleAddToCart}
         >
           Add to Cart

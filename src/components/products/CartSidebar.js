@@ -7,7 +7,6 @@ import { useCart } from "../contexts/CartContext";
 export default function CartSidebar({ isOpen, onClose }) {
   const { cartItems, updateQuantity, removeItem, totalPrice } = useCart();
 
-  // Lock background scroll when sidebar is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -17,7 +16,6 @@ export default function CartSidebar({ isOpen, onClose }) {
 
   return (
     <div className="relative">
-      {/* Overlay */}
       {isOpen && (
         <div
           onClick={onClose}
@@ -25,80 +23,142 @@ export default function CartSidebar({ isOpen, onClose }) {
         />
       )}
 
-      {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] bg-[#FFFBF7] rounded-l-3xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] bg-[#FFFBF7] md:rounded-l-3xl z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         } flex flex-col`}
       >
-        {/* Scrollable Area */}
         <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3 custom-scroll">
           {/* Header */}
           <div className="flex justify-between items-center py-2 md:mb-2 mb-0">
-            <h2 className="text-xl md:text-2xl font-extrabold tracking-tight font-poppins">Cart</h2>
-            <button onClick={onClose} className="p-3 shadow rounded-full bg-white">
+            <h2 className="text-2xl font-extrabold tracking-tight font-poppins">Cart</h2>
+            <button onClick={onClose} className="cursor-pointer p-3 shadow rounded-full bg-white">
               <X className="w-5 h-5 text-primary " />
             </button>
           </div>
 
-          {/* Cart Items */}
-          {cartItems.length === 0 ? (
-            <p className="text-gray-500 text-center mt-10">Your cart is empty.</p>
-          ) : (
-            cartItems.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-4 shadow-md rounded-lg bg-white p-3"
-              >
-                <div className="w-24 h-24 ">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="h-full w-full object-cover rounded-lg"
-                  />
-                </div>
-                <div className="flex-1 font-poppins">
-                  <div className="flex justify-between">
-                    <div>
-                      <h4 className="text-sm text-gray-700 line-clamp-2">{item.title}</h4>
-                      <p className="text-md font-medium text-gray-900 mt-1">
-                        {item.currency} {typeof item.price === 'number' ? item.price.toFixed(2) : '0.00'}
-                      </p>
-                    </div>
-                    <button onClick={() => removeItem(item.id)} title="Remove">
-                      <Trash2
-                        size={40}
-                        className="cursor-pointer p-3 mb-5 bg-gray-50 text-primary rounded-full"
+          {/* Cart Items - Mobile */}
+          <div className="block sm:hidden">
+            <div className="max-h-[500px] overflow-y-auto space-y-3">
+              {cartItems.length === 0 ? (
+                <p className="text-gray-500 text-center mt-10">Your cart is empty.</p>
+              ) : (
+                cartItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-start gap-4 shadow-md rounded-lg bg-white p-3"
+                  >
+                    <div className="w-24 h-24">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="h-full w-full object-cover rounded-lg"
                       />
-                    </button>
-                  </div>
+                    </div>
+                    <div className="flex-1 font-poppins">
+                      <div className="flex justify-between">
+                        <div>
+                          <h4 className="text-sm text-gray-700 line-clamp-2">{item.title}</h4>
+                          <p className="text-md font-medium text-gray-900 mt-1">
+                            {item.currency}{" "}
+                            {typeof item.price === "number" ? item.price.toFixed(2) : "0.00"}
+                          </p>
+                        </div>
+                        <button onClick={() => removeItem(item.id)} title="Remove">
+                          <Trash2
+                            size={40}
+                            className="cursor-pointer p-3 mb-5 bg-gray-50 text-primary rounded-full"
+                          />
+                        </button>
+                      </div>
 
-                  <div className="flex justify-end items-end">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => updateQuantity(item.id, "dec")}
-                        className="w-9 h-9 bg-gray-50 rounded-full text-xl"
-                      >
-                        −
+                      <div className="flex justify-end items-end">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => updateQuantity(item.id, "dec")}
+                            className="w-9 h-9 bg-gray-50 rounded-full text-xl"
+                          >
+                            −
+                          </button>
+                          <span className="px-2 text-sm font-medium text-gray-950">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.id, "inc")}
+                            className="w-9 h-9 bg-gray-50 rounded-full text-xl"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Cart Items - Desktop */}
+          <div className="hidden sm:block space-y-3">
+            {cartItems.length === 0 ? (
+              <p className="text-gray-500 text-center mt-10">Your cart is empty.</p>
+            ) : (
+              cartItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-4 shadow-md rounded-lg bg-white p-3"
+                >
+                  <div className="w-24 h-24">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="h-full w-full object-cover rounded-lg"
+                    />
+                  </div>
+                  <div className="flex-1 font-poppins">
+                    <div className="flex justify-between">
+                      <div>
+                        <h4 className="text-sm text-gray-700 line-clamp-2">{item.title}</h4>
+                        <p className="text-md font-medium text-gray-900 mt-1">
+                          {item.currency}{" "}
+                          {typeof item.price === "number" ? item.price.toFixed(2) : "0.00"}
+                        </p>
+                      </div>
+                      <button onClick={() => removeItem(item.id)} title="Remove">
+                        <Trash2
+                          size={40}
+                          className="cursor-pointer p-3 mb-5 bg-gray-50 text-primary rounded-full"
+                        />
                       </button>
-                      <span className="px-2 text-sm font-medium text-gray-950">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.id, "inc")}
-                        className="w-9 h-9 bg-gray-50 rounded-full text-xl"
-                      >
-                        +
-                      </button>
+                    </div>
+
+                    <div className="flex justify-end items-end">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => updateQuantity(item.id, "dec")}
+                          className="cursor-pointer w-9 h-9 bg-gray-50 rounded-full text-xl"
+                        >
+                          −
+                        </button>
+                        <span className="px-2 text-sm font-medium text-gray-950">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(item.id, "inc")}
+                          className="cursor-pointer w-9 h-9 bg-gray-50 rounded-full text-xl"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
 
           {/* Delivery Info */}
-          <div className="pt-2">
+          <div className="pt-2 border-t border-gray-300 ">
             <h3 className="font-semibold text-gray-800 mb-2 text-sm">Delivery Schedule</h3>
             <div className="flex gap-2 mb-2">
               <select className="w-1/2 border p-2 rounded text-sm">
@@ -121,10 +181,10 @@ export default function CartSidebar({ isOpen, onClose }) {
           </div>
 
           {/* Footer */}
-          <div className="md:mb-0 mb-14 p-4">
+          <div className="md:mb-0 p-4">
             <div className="flex justify-between font-semibold text-base">
               <span>Total</span>
-              <span>QAR {typeof totalPrice === 'number' ? totalPrice.toFixed(2) : '0.00'}</span>
+              <span>QAR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
             </div>
             <p className="text-sm text-gray-500 mt-1">
               Shipping, tax & discounts calculated at checkout.

@@ -1,7 +1,6 @@
 import "./globals.css";
 import Navigations from "@/components/Navigations/Navigations";
 import Footer from "@/components/Footer";
-import BottomNav from "@/components/Navigations/BottomNav";
 import { UIProvider } from "@/components/contexts/UIContext";
 import { Poppins, Roboto } from "next/font/google";
 import { getNavigationMenu } from "@/lib/data";
@@ -39,7 +38,6 @@ export default async function RootLayout({ children }) {
             <Navigations menuItems={menuItems} />
             {children}
             <Footer />
-            <BottomNav />
             <div id="modal-root"></div>
           </UIProvider>
         </CartProvider>
