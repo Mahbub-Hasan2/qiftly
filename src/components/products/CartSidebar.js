@@ -31,26 +31,27 @@ export default function CartSidebar({ isOpen, onClose }) {
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity"
+          className="fixed inset-0 bg-black/25 backdrop-blur-xs z-40 transition-opacity"
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } flex flex-col`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] bg-[#FFFBF7] rounded-l-3xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+          } flex flex-col`}
       >
-        {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b shrink-0">
-          <h2 className="text-xl font-semibold tracking-tight">Your Cart</h2>
-          <button onClick={onClose}>
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scroll">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scroll">
+          {/* Header */}
+          <div className="flex justify-between items-center py-2 shrink-0">
+            <h2 className="text-xl font-extrabold tracking-tight font-poppins">Cart</h2>
+            <button onClick={onClose} className="p-3 shadow rounded-full">
+              <X className="w-5 h-5 text-primary" />
+            </button>
+          </div>
+
           {cartItems.length === 0 ? (
             <p className="text-gray-500 text-center mt-10">Your cart is empty.</p>
           ) : (
@@ -61,38 +62,52 @@ export default function CartSidebar({ isOpen, onClose }) {
               const image = item?.images?.edges?.[0]?.node?.url || "/placeholder.jpg";
 
               return (
-                <div key={index} className="flex items-start gap-4 border-b pb-4">
-                  <img
-                    src={image}
-                    alt={title}
-                    className="w-20 h-20 object-cover rounded-lg border"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-800 line-clamp-2">{title}</h4>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {currency} {price.toFixed(2)}
-                    </p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <button
-                        onClick={() => updateQuantity(item.id, "dec")}
-                        className="w-7 h-7 border rounded hover:bg-gray-100"
-                      >
-                        −
-                      </button>
-                      <span className="px-2 text-sm">{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.id, "inc")}
-                        className="w-7 h-7 border rounded hover:bg-gray-100"
-                      >
-                        +
-                      </button>
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="ml-auto text-red-500 hover:text-red-700"
-                        title="Remove"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                <div key={index} className="flex items-start gap-4 shadow-md rounded-lg bg-white p-3">
+                  <div>
+                    <img
+                      src={image}
+                      alt={title}
+                      className="w-25 h-25 object-cover rounded-lg"
+                    />
+                  </div>
+                  <div className="flex-1 font-poppins">
+                    <div className="flex">
+                      <div className="">
+                        <h4 className="text-sm  text-gray-700 line-clamp-2">{title}</h4>
+
+                        <p className="text-md font-medium text-gray-900 mt-1">
+                          {currency} {price.toFixed(2)}
+                        </p>
+                      </div>
+
+                      <div className="ml-auto ">
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          className=""
+                          title="Remove"
+                        >
+                          <Trash2 size={40} className="cursor-pointer p-3 bg-gray-50 text-md text-xl text-primary rounded-full" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end items-end">
+                      <div className=" flex items-center gap-2">
+                        <button
+                          onClick={() => updateQuantity(item.id, "dec")}
+                          className="cursor-pointer w-9 h-9 bg-gray-50 text-md text-xl rounded-full"
+                        >
+                          −
+                        </button>
+                        <span className="px-2 text-sm font-medium text-gray-950">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.id, "inc")}
+                          className="cursor-pointer w-9 h-9 bg-gray-50 text-md text-xl rounded-full"
+                        >
+                          +
+                        </button>
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -122,21 +137,23 @@ export default function CartSidebar({ isOpen, onClose }) {
               className="w-full border p-2 rounded text-sm"
             />
           </div>
+
+          {/* Footer */}
+          <div className="md:mb-0 mb-14 p-4  shrink-0">
+            <div className="flex justify-between font-semibold text-base">
+              <span>Total</span>
+              <span>QAR {total.toFixed(2)}</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-1">
+              Shipping, tax & discounts calculated at checkout.
+            </p>
+            <button className="mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
+              Proceed to Checkout
+            </button>
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t bg-white shrink-0">
-          <div className="flex justify-between font-semibold text-base">
-            <span>Total</span>
-            <span>QAR {total.toFixed(2)}</span>
-          </div>
-          <p className="text-sm text-gray-500 mt-1">
-            Shipping, tax & discounts calculated at checkout.
-          </p>
-          <button className="mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
-            Proceed to Checkout
-          </button>
-        </div>
+
       </div>
     </div>
   );
