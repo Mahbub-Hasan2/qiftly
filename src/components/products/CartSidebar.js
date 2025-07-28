@@ -3,10 +3,14 @@
 import { useEffect } from "react";
 import { X, Trash2 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useUI } from "../contexts/UIContext";
 
 export default function CartSidebar({ isOpen, onClose }) {
+  const router = useRouter();
+
   const { cartItems, updateQuantity, removeItem, totalPrice } = useCart();
+  const { setIsCartOpen } = useUI();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -189,11 +193,14 @@ export default function CartSidebar({ isOpen, onClose }) {
             <p className="text-sm text-gray-500 mt-1">
               Shipping, tax & discounts calculated at checkout.
             </p>
-            <Link href="/Checkout">
-              <button className="cursor-pointer mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
-                Proceed to Checkout
-              </button>
-            </Link>
+            <button
+              onClick={() => {
+                setIsCartOpen(false);
+                router.push("/Checkout");
+              }}
+              className="cursor-pointer mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
+              Proceed to Checkout
+            </button>
 
           </div>
         </div>
