@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { X, Trash2 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
+import Link from "next/link";
 
 export default function CartSidebar({ isOpen, onClose }) {
   const { cartItems, updateQuantity, removeItem, totalPrice } = useCart();
@@ -24,9 +25,8 @@ export default function CartSidebar({ isOpen, onClose }) {
       )}
 
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] bg-[#FFFBF7] md:rounded-l-3xl z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } flex flex-col`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] bg-[#FFFBF7] md:rounded-l-3xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+          } flex flex-col`}
       >
         <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3 custom-scroll">
           {/* Header */}
@@ -189,9 +189,12 @@ export default function CartSidebar({ isOpen, onClose }) {
             <p className="text-sm text-gray-500 mt-1">
               Shipping, tax & discounts calculated at checkout.
             </p>
-            <button className="mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
-              Proceed to Checkout
-            </button>
+            <Link href="/Checkout">
+              <button className="cursor-pointer mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
+                Proceed to Checkout
+              </button>
+            </Link>
+
           </div>
         </div>
       </div>

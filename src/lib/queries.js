@@ -2,24 +2,29 @@
 
 export const ALL_PRODUCTS_QUERY = `{
   products(first: 10) {
-    edges {
-      node {
-        id
-        title
-        handle
-        productType
-        tags
-        images(first: 1) {
-          edges {
-            node {
-              url
-              altText
+      edges {
+        node {
+          id
+          title
+          handle
+          tags
+          images(first: 1) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
             }
           }
         }
       }
     }
-  }
 }
 `;
 
