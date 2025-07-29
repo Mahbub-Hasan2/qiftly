@@ -24,7 +24,7 @@ export default function SearchSuggestions({
   const showInitialSuggestions = query.trim().length < 2;
 
   return (
-    <div className="absolute z-50 w-full mt-2 bg-white border border-gray-300 rounded-xl shadow-lg p-4">
+    <div onMouseDown={(e) => e.stopPropagation()} className="absolute z-80 w-full mt-2 bg-white border border-gray-300 rounded-xl shadow-lg p-4">
       {showInitialSuggestions ? (
         <>
           <p className="text-sm text-gray-600 mb-2 font-medium">Try searching for:</p>

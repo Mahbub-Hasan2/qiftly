@@ -3,6 +3,7 @@ import { FaFacebookF, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
 import Link from "next/link";
 import QiftlyLogo from "../assets/images/Qiftly_logo__2_.png"
 import Image from "next/image";
+import WhatsappButton from "./ui/WhatsappButton";
 
 export default function Footer() {
   return (
@@ -84,6 +85,8 @@ export default function Footer() {
       <div className="mt-10 text-center text-sm border-t border-gray-700 pt-4">
         © {new Date().getFullYear()} Qiftly. All rights reserved.
       </div>
+
+      <WhatsappButton />
     </footer>
   );
 }
