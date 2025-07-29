@@ -78,7 +78,7 @@ export const getHeroSlides = async () => {
 
     const slides = data.metaobjects.edges.map(({ node }) => {
       const slide = {
-        link: node.displayName || '',
+        link: '',
         desktopImg: '',
         mobileImg: '',
       };
@@ -89,6 +89,9 @@ export const getHeroSlides = async () => {
         }
         if (field.key === 'mobile_image') {
           slide.mobileImg = field.reference?.image?.url || field.value || '';
+        }
+        if (field.key === 'title') {
+          slide.link = field.reference?.image?.title || field.value || '';
         }
       });
 

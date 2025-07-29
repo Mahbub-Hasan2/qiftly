@@ -79,10 +79,11 @@ export const COLLECTION_BY_HANDLE_QUERY = `
 
 
 export const HERO_SLIDER_METAOBJECT_QUERY = `{
-  metaobjects(first: 5, type: "list_of_objects") {
+  metaobjects(first: 5, type: "home_slider_ben") {
     edges {
       node {
         id
+        type
         fields {
           key
           value

@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 
 export default function HeroSlider({slides}) {
+  console.log(slides)
   const [current, setCurrent] = useState(0);
   const [translate, setTranslate] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -70,7 +71,7 @@ export default function HeroSlider({slides}) {
           onTouchEnd={handleTouchEnd}
         >
           {slides.map((slide, idx) => (
-            <Link href="/" key={idx} className="min-w-full">
+            <Link href={"/collections/" + slide.link.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')} key={idx} className="min-w-full">
               <div className="cursor-pointer select-none">
                 <img
                   src={slide.desktopImg}

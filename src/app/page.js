@@ -15,7 +15,7 @@ export default async function Home() {
   const { tabsData, error: tabsError } = await getOccasionTabs();
   // const collections = await getAllCollections();
   // const productsByCollection = await getProductsByCollection("cakes");
-
+console.log(slides)
   return (
     <ErrorBoundary>
       <main className="md:p-4 p-1 flex items-center justify-center">

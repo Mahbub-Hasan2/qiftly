@@ -7,11 +7,11 @@ import ClientView from "@/components/collections/ClientView";
 export default async function CollectionPage({ params }) {
   const initialProducts = await getProductsByCollection(params.handle);
   const allProducts = await getAllProducts(); // সব প্রোডাক্ট
-  console.log(allProducts)
   return (
     <ClientView
       initialProducts={initialProducts || []}
       allProducts={allProducts?.products || []}
+      title={params.handle || ""}
     />
   );
 }

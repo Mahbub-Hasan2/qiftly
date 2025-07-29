@@ -10,6 +10,18 @@ export default function MegaMenu({ menuItems }) {
         <div className="relative ">
             <div className="flex mx-auto max-w-7xl ">
                 <ul className="flex space-x-6">
+                    <li className="group py-4">
+                        <div className="group hover:text-orange-300 flex gap-1 poppins-bold justify-items-center cursor-pointer">
+                            <Link
+                                href="/"
+                                className="text-gray-700 group-hover:text-orange-300 text-sm font-medium"
+                            >
+                                Home
+                            </Link>
+                        </div>
+                    </li>
+
+
                     {menuItems.map((menu, index) => (
                         <li key={index} className="group py-4">
                             <div className="group hover:text-orange-300 flex gap-1 poppins-bold justify-items-center cursor-pointer">
