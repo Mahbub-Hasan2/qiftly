@@ -228,3 +228,30 @@ query GetMainMenu {
 `;
 
 
+export const SEARCH_PRODUCTS_QUERY = `{
+  products(first: 10, query: "") {
+      edges {
+        node {
+          id
+          title
+          handle
+          tags
+          images(first: 1) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
+    }
+}
+`;

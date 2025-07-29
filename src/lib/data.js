@@ -177,7 +177,7 @@ export async function getProductByHandle(handle) {
 }
 
 
-  
+
 export const getNavigationMenu = async () => {
   try {
     const data = await shopifyFetch(NAVIGATION_QUERY);
@@ -203,6 +203,60 @@ export const getNavigationMenu = async () => {
     return menuItems;
   } catch (err) {
     console.error("Failed to fetch navigation menu:", err.message || err);
+    return [];
+  }
+};
+
+
+export const searchProducts = async (searchTerm) => {
+  try {
+    const cleanQuery = searchTerm.trim().replace(/"/g, '');
+    const encoded = `title:*${cleanQuery}* OR tag:*${cleanQuery}* OR vendor:*${cleanQuery}*`;
+
+    const query = `
+      {
+        products(first: 10, query: "${encoded}") {
+          edges {
+            node {
+              id
+              title
+              handle
+              tags
+              vendor
+              images(first: 1) {
+                edges {
+                  node {
+                    url
+                    altText
+                  }
+                }
+              }
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const data = await shopifyFetch(query);
+    const products = data.products.edges.map(({ node }) => node);
+    return products.map((p) => ({
+      id: p.id,
+      title: p.title,
+      handle: p.handle,
+      tags: p.tags || [],
+      vendor: p.vendor || '',
+      image: p.images.edges[0]?.node.url || '',
+      price: p.priceRange.minVariantPrice.amount,
+      currency: p.priceRange.minVariantPrice.currencyCode,
+    }));
+  } catch (err) {
+    console.error('Search failed:', err.message || err);
     return [];
   }
 };

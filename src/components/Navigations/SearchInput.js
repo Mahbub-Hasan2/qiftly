@@ -2,48 +2,22 @@
 
 import { useEffect, useRef, useState } from 'react';
 import SearchSuggestions from './SearchSuggestions';
+import { searchProducts } from '@/lib/data';
 
 export default function SearchInput({ isFocused, setIsFocused }) {
+  const [relatedTerms, setRelatedTerms] = useState([]);
   const [query, setQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const wrapperRef = useRef(null);
+  const inputRef = useRef(null);
 
-  const wrapperRef = useRef(null); // সার্চ ইনপুট ও সাজেশন সহ সব কভার করবে
-  const inputRef = useRef(null);   // ইনপুট ফোকাসের জন্য
-
-  const collections = [
-    'Birthday Cake', 'Buy Balloons', 'Flower Shop',
-    'Tulips Flowers', 'Buy Chocolates', 'Buy Candles',
-    'Cake Shop', 'Buy Perfumes',
-  ];
-
-  const trendingGifts = [
-    {
-      id: 1,
-      name: 'Birthday Labubu Mischief Cake',
-      price: 'QAR 380',
-      image: '/cake1.png',
-    },
-    {
-      id: 2,
-      name: 'Squid Squad Celebration Cake',
-      price: 'QAR 130',
-      image: '/cake2.png',
-    },
-    {
-      id: 3,
-      name: 'Ghibli Printed Mug',
-      price: 'QAR 120',
-      image: '/cake3.png',
-    },
-  ];
-
-  // Auto-focus when `isFocused` becomes true
   useEffect(() => {
     if (isFocused) {
       inputRef.current?.focus();
     }
   }, [isFocused]);
 
-  // Outside click detection
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -57,9 +31,36 @@ export default function SearchInput({ isFocused, setIsFocused }) {
     };
   }, []);
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (query.trim().length > 1) {
+        setLoading(true);
+        searchProducts(query)
+          .then((data) => {
+            setSuggestions(data);
+
+            // Related suggestions তৈরি
+            const tags = new Set();
+            data.forEach((item) => {
+              item.tags?.forEach((tag) => tags.add(tag.toLowerCase()));
+            });
+            setRelatedTerms([...tags].slice(0, 6)); // প্রথম ৬ টা সাজেশন রাখো
+          })
+          .finally(() => setLoading(false));
+      } else {
+        setSuggestions([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [query]);
+
+  const handleSuggestedClick = (term) => {
+    setQuery(term);
+  };
+
   return (
     <div ref={wrapperRef} className="relative w-full">
-      {/* Input box */}
       <div className="flex items-center w-full border border-gray-500 rounded-md overflow-hidden bg-white focus-within:ring-1 focus-within:ring-gray-500 hover:ring-1 hover:ring-gray-500 transition">
         <input
           ref={inputRef}
@@ -72,10 +73,7 @@ export default function SearchInput({ isFocused, setIsFocused }) {
         />
 
         {query && (
-          <button
-            onClick={() => setQuery('')}
-            className="text-gray-400 hover:text-black px-3"
-          >
+          <button onClick={() => setQuery('')} className="text-gray-400 hover:text-black px-3">
             ×
           </button>
         )}
@@ -100,12 +98,15 @@ export default function SearchInput({ isFocused, setIsFocused }) {
         </button>
       </div>
 
-      {/* Suggestions */}
       <SearchSuggestions
         show={isFocused}
-        collections={collections}
-        trendingGifts={trendingGifts}
+        loading={loading}
+        results={suggestions}
+        query={query}
+        onSuggestedClick={handleSuggestedClick}
+        relatedTerms={relatedTerms}
       />
+
     </div>
   );
 }
