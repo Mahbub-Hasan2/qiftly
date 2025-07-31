@@ -9,7 +9,7 @@ export const useCart = () => useContext(CartContext);
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [specialRequestMessage, setSpecialRequestMessage] = useState(""); 
-
+// console.log(specialRequestMessage)
   const giftWrapItem = {
     id: "gift_wrap",
     title: "🎁 Gift Wrapping",
