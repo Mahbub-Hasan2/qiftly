@@ -3,9 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useUI } from '../contexts/UIContext';
 
 
-export default function HeroSlider({slides}) {
+export default function HeroSlider({ slides }) {
+  const { isCartOpen } = useUI();
+
   const [current, setCurrent] = useState(0);
   const [translate, setTranslate] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -108,18 +111,24 @@ export default function HeroSlider({slides}) {
         {/* Pagination Dots */}
 
       </div>
-      <div className="relative">
-        <div className="absolute  md:p-4 p-1.5 left-1/2 transform -translate-x-1/2 flex space-x-2 z-50">
-          {slides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrent(idx)}
-              className={`md:h-2 h-0.5 rounded-full transition-all duration-300 ${current === idx ? 'md:w-8 w-5 bg-primary' : 'md:w-5 w-3 bg-[#d5d5d5]'
-                }`}
-            />
-          ))}
+
+      {
+        isCartOpen ? 
+         "" : <div className="relative">
+          <div className="absolute  md:p-4 p-1.5 left-1/2 transform -translate-x-1/2 flex space-x-2 z-50">
+            {slides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrent(idx)}
+                className={`md:h-2 h-0.5 rounded-full transition-all duration-300 ${current === idx ? 'md:w-8 w-5 bg-primary' : 'md:w-5 w-3 bg-[#d5d5d5]'
+                  }`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      }
+
+
     </div>
   );
 }
