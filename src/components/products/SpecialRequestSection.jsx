@@ -4,31 +4,26 @@ import { useCart } from "../contexts/CartContext";
 import { MessageSquareMore } from "lucide-react";
 
 export default function SpecialRequestSection() {
-  const [needGiftWrap, setNeedGiftWrap] = useState(false);
   const [showTextarea, setShowTextarea] = useState(false);
-  const [message, setMessage] = useState("");
-  const [submittedMessage, setSubmittedMessage] = useState("");
+  const { specialRequestMessage, setSpecialRequestMessage, cartItems, addGiftWrap, removeGiftWrap } = useCart();
 
-  const { addGiftWrap, removeGiftWrap, cartItems } = useCart();
+  const [needGiftWrap, setNeedGiftWrap] = useState(false);
 
-  // Update needGiftWrap whenever cartItems changes
   useEffect(() => {
     const giftExists = cartItems.some((item) => item.id === "gift_wrap");
     setNeedGiftWrap(giftExists);
   }, [cartItems]);
 
-  // When user toggles checkbox manually
   const handleGiftToggle = () => {
     if (needGiftWrap) {
       removeGiftWrap();
     } else {
       addGiftWrap();
     }
-    // State will auto-update via cartItems effect above
   };
 
   return (
-    <div className="border-t border-gray-300 pt-4 mt-2">
+    <div className="border-t border-gray-300 pt-4 mt-2 font-poppins">
       <h3 className="font-medium text-gray-800 mb-5 text-xl">Special request</h3>
 
       {/* Gift wrap toggle */}
@@ -43,7 +38,6 @@ export default function SpecialRequestSection() {
             <p className="text-xs text-gray-500">Would you like the gift to be wrapped?</p>
           </div>
         </div>
-
         <label className="relative inline-flex items-center cursor-pointer">
           <input
             type="checkbox"
@@ -56,14 +50,17 @@ export default function SpecialRequestSection() {
         </label>
       </div>
 
-      {/* Special request textarea/preview */}
+      {/* Special Request Input */}
       <div className="flex items-start gap-3 mb-8">
         <div className="text-xl leading-6 pt-0.5">
           <MessageSquareMore />
         </div>
         <div className="w-full">
-          <p onClick={() => setShowTextarea(true)} className="text-sm font-medium text-gray-800">Any special request?</p>
-          {!submittedMessage && !showTextarea && (
+          <p onClick={() => setShowTextarea(true)} className="text-sm font-medium text-gray-800">
+            Any special request?
+          </p>
+
+          {!specialRequestMessage && !showTextarea && (
             <p className="text-xs text-gray-500">Anything else we need to know ?</p>
           )}
 
@@ -71,16 +68,13 @@ export default function SpecialRequestSection() {
             <div>
               <textarea
                 rows={2}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                value={specialRequestMessage}
+                onChange={(e) => setSpecialRequestMessage(e.target.value)}
                 placeholder="Write your message..."
                 className="w-full border border-gray-300 p-2 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-black resize-none"
               />
               <button
-                onClick={() => {
-                  setSubmittedMessage(message);
-                  setShowTextarea(false);
-                }}
+                onClick={() => setShowTextarea(false)}
                 className="mt-2 px-3 py-1 bg-black text-white text-sm rounded hover:bg-gray-800"
               >
                 Submit
@@ -88,14 +82,11 @@ export default function SpecialRequestSection() {
             </div>
           )}
 
-          {submittedMessage && !showTextarea && (
+          {specialRequestMessage && !showTextarea && (
             <div className="mt-2 bg-gray-100 p-2 rounded text-sm text-gray-800">
-              {submittedMessage}
+              {specialRequestMessage}
               <button
-                onClick={() => {
-                  setShowTextarea(true);
-                  setSubmittedMessage("");
-                }}
+                onClick={() => setShowTextarea(true)}
                 className="block mt-1 text-xs text-blue-600 underline"
               >
                 Edit

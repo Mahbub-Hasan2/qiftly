@@ -8,6 +8,7 @@ export const useCart = () => useContext(CartContext);
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
+  const [specialRequestMessage, setSpecialRequestMessage] = useState(""); 
 
   const giftWrapItem = {
     id: "gift_wrap",
@@ -101,6 +102,8 @@ export function CartProvider({ children }) {
         totalPrice,
         addGiftWrap,
         removeGiftWrap,
+         specialRequestMessage,  
+        setSpecialRequestMessage,  
       }}
     >
       {children}

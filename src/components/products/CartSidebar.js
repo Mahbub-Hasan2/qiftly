@@ -167,7 +167,7 @@ export default function CartSidebar({ isOpen, onClose }) {
 
           {/* Footer */}
 
-          <div className="md:pt-4 pt-2"> {/*এই পার্টকে আমি স্টিকি করতে চাই বটমে , যদি প্রডাক্ট বেশি হয় তাহলে সি্িটকি চলে যাবে , যেনো নিচের দিকে চলে যায়। */}
+          <div className="md:pt-4 pt-2 font-poppins"> {/*এই পার্টকে আমি স্টিকি করতে চাই বটমে , যদি প্রডাক্ট বেশি হয় তাহলে সি্িটকি চলে যাবে , যেনো নিচের দিকে চলে যায়। */}
             <h2 className="font-medium text-gray-800 text-xl mb-4">Payment summary</h2>
 
             {/* Subtotal */}

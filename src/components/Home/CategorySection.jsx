@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function CategorySection({tabs, title}) {
   return (
     <div className="max-w-7xl mx-auto px-4 pt-8">
-        <div className="mb-12">
+        <div className="md:mb-0 mb-3">
           <h2 className="text-md md:text-2xl font-bold mb-4 font-poppins ">{title}</h2>
           <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 md:gap-4 gap-2">
             {tabs.map((tab, i) => (
