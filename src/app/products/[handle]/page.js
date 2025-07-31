@@ -5,9 +5,10 @@ import YouMayAlsoLike from "@/components/productDetails/YouMayAlsoLike";
 import { getAllProducts, getProductByHandle } from "@/lib/data";
 import { notFound } from "next/navigation";
 
-// 👇 এটাকে তোমার page.js এর উপরে রাখো
+// 👇 এটাকে তোমার page.js এর উপরে রাখোd
 export async function generateMetadata({ params }) {
-  const product = await getProductByHandle(params.handle);
+  const { handle } = await params;
+  const product = await getProductByHandle(handle);
 
   if (!product) {
     return {
@@ -34,7 +35,8 @@ export async function generateStaticParams() {
 }
 
 export default async function ProductPage({ params }) {
-  const product = await getProductByHandle(params.handle);
+  const { handle } = await params;
+  const product = await getProductByHandle(handle);
   if (!product) return notFound();
 
   const { products: allProducts } = await getAllProducts();

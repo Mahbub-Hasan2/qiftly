@@ -5,6 +5,7 @@ import { X, Trash2 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { useUI } from "../contexts/UIContext";
+import SpecialRequestSection from "./SpecialRequestSection";
 
 export default function CartSidebar({ isOpen, onClose }) {
   const router = useRouter();
@@ -161,48 +162,54 @@ export default function CartSidebar({ isOpen, onClose }) {
             )}
           </div>
 
-          {/* Delivery Info */}
-          <div className="pt-2 border-t border-gray-300 ">
-            <h3 className="font-semibold text-gray-800 mb-2 text-sm">Delivery Schedule</h3>
-            <div className="flex gap-2 mb-2">
-              <select className="w-1/2 border p-2 rounded text-sm">
-                <option>Select City</option>
-                <option>Doha</option>
-                <option>Al Rayyan</option>
-              </select>
-              <input type="date" className="w-1/2 border p-2 rounded text-sm" />
-            </div>
-            <select className="w-full border p-2 rounded text-sm mb-2">
-              <option>Delivery Type & Time</option>
-              <option>Morning (9am - 12pm)</option>
-              <option>Evening (4pm - 8pm)</option>
-            </select>
-            <textarea
-              rows={2}
-              placeholder="Message for recipient"
-              className="w-full border p-2 rounded text-sm"
-            />
-          </div>
+          {/* Special request */}
+          <SpecialRequestSection />
 
           {/* Footer */}
-          <div className="md:mb-0 p-4">
-            <div className="flex justify-between font-semibold text-base">
-              <span>Total</span>
-              <span>QAR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
+
+          <div className="md:pt-4 pt-2"> {/*এই পার্টকে আমি স্টিকি করতে চাই বটমে , যদি প্রডাক্ট বেশি হয় তাহলে সি্িটকি চলে যাবে , যেনো নিচের দিকে চলে যায়। */}
+            <h2 className="font-semibold md:text-lg text-sm mb-3">Payment summary</h2>
+
+            {/* Subtotal */}
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-gray-600">Subtotal</span>
+              <span className="font-medium text-gray-800">QR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
             </div>
-            <p className="text-sm text-gray-500 mt-1">
-              Shipping, tax & discounts calculated at checkout.
-            </p>
-            <button
+
+            {/* Delivery (with welcome gift) */}
+            <div className="flex justify-between text-sm items-center mb-1">
+              <div className="flex items-center gap-2 text-gray-600">
+                <span>Free delivery</span>
+                <span className="bg-yellow-200 text-black text-xs px-2 py-0.5 rounded font-medium">Welcome gift</span>
+                <span className="text-gray-400 text-xs cursor-pointer">ⓘ</span>
+              </div>
+              <span className="line-through text-gray-400 text-sm">QR 10.00</span>
+            </div>
+
+            <hr className="my-3 border-gray-200" />
+
+            {/* Total */}
+            <div className="flex justify-between font-semibold text-base mb-4">
+              <span>Total amount</span>
+              <span className="text-black">QR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3">
+              <button className="flex-1 cursor-pointer border border-black text-black py-2 rounded-full text-sm hover:bg-gray-100 transition">
+                Add items
+              </button>
+              <button
               onClick={() => {
                 setIsCartOpen(false);
                 router.push("/Checkout");
               }}
-              className="cursor-pointer mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
-              Proceed to Checkout
-            </button>
-
+              className="flex-1 cursor-pointer bg-primary text-white py-2 rounded-full text-sm hover:bg-orange-600 transition">
+                Checkout
+              </button>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

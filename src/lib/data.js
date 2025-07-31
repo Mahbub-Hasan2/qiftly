@@ -211,7 +211,7 @@ export const getNavigationMenu = async () => {
 export const searchProducts = async (searchTerm) => {
   try {
     const cleanQuery = searchTerm.trim().replace(/"/g, '');
-    const encoded = `title:*${cleanQuery}* OR tag:*${cleanQuery}* OR vendor:*${cleanQuery}*`;
+    const encoded = `title:*${cleanQuery}* OR tags:*${cleanQuery}* OR vendor:*${cleanQuery}*`;
 
     const query = `
       {
