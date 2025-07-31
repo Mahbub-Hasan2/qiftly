@@ -227,7 +227,7 @@ export default function CheckoutPage() {
           />
         </div>
 
-        <div className="lg:col-span-2 bg-[#FFFBF7] border border-gray-100 rounded-xl sticky top-6 h-fit">
+        <div className="lg:col-span-2 bg-[#FFFBF7] border border-gray-100 rounded-xl">
           <OrderSummary />
           <div className="p-4">
             <Button type="submit" className="w-full">
