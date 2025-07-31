@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCart } from "../contexts/CartContext";
+import { MessageSquareMore } from "lucide-react";
 
 export default function SpecialRequestSection() {
   const [needGiftWrap, setNeedGiftWrap] = useState(false);
@@ -28,7 +29,7 @@ export default function SpecialRequestSection() {
 
   return (
     <div className="border-t border-gray-300 pt-4">
-      <h3 className="font-semibold text-gray-800 mb-3 text-sm">Special request</h3>
+      <h3 className="font-semibold text-gray-800 mb-5 text-xl">Special request</h3>
 
       {/* Gift wrap toggle */}
       <div className="flex items-start justify-between mb-5">
@@ -50,22 +51,20 @@ export default function SpecialRequestSection() {
             checked={needGiftWrap}
             onChange={handleGiftToggle}
           />
-          <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-black transition-all duration-300"></div>
-          <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform peer-checked:translate-x-5 transition-transform duration-300"></div>
+          <div className="w-10 h-6 bg-gray-300 rounded-full peer peer-checked:bg-black transition-all duration-300"></div>
+          <div className="absolute left-0.6 top-0.6 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-5 transition-transform duration-300"></div>
         </label>
       </div>
 
       {/* Special request textarea/preview */}
-      <div className="flex items-start gap-3">
-        <div className="text-xl leading-6">💬</div>
+      <div className="flex items-start gap-3 mb-8">
+        <div className="text-xl leading-6 pt-0.5">
+          <MessageSquareMore />
+        </div>
         <div className="w-full">
+          <p onClick={() => setShowTextarea(true)} className="text-sm font-medium text-gray-800">Any special request?</p>
           {!submittedMessage && !showTextarea && (
-            <button
-              onClick={() => setShowTextarea(true)}
-              className="text-sm text-gray-700 underline"
-            >
-              Add a special request
-            </button>
+            <p className="text-xs text-gray-500">Anything else we need to know ?</p>
           )}
 
           {showTextarea && (

@@ -168,16 +168,16 @@ export default function CartSidebar({ isOpen, onClose }) {
           {/* Footer */}
 
           <div className="md:pt-4 pt-2"> {/*এই পার্টকে আমি স্টিকি করতে চাই বটমে , যদি প্রডাক্ট বেশি হয় তাহলে সি্িটকি চলে যাবে , যেনো নিচের দিকে চলে যায়। */}
-            <h2 className="font-semibold md:text-lg text-sm mb-3">Payment summary</h2>
+            <h2 className="font-semibold md:text-lg text-2xl mb-4">Payment summary</h2>
 
             {/* Subtotal */}
-            <div className="flex justify-between text-sm mb-2">
+            <div className="flex justify-between text-sm mb-3">
               <span className="text-gray-600">Subtotal</span>
               <span className="font-medium text-gray-800">QR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
             </div>
 
             {/* Delivery (with welcome gift) */}
-            <div className="flex justify-between text-sm items-center mb-1">
+            <div className="flex justify-between text-sm items-center mb-3">
               <div className="flex items-center gap-2 text-gray-600">
                 <span>Free delivery</span>
                 <span className="bg-yellow-200 text-black text-xs px-2 py-0.5 rounded font-medium">Welcome gift</span>
@@ -185,28 +185,31 @@ export default function CartSidebar({ isOpen, onClose }) {
               </div>
               <span className="line-through text-gray-400 text-sm">QR 10.00</span>
             </div>
-
-            <hr className="my-3 border-gray-200" />
-
+            
             {/* Total */}
             <div className="flex justify-between font-semibold text-base mb-4">
               <span>Total amount</span>
               <span className="text-black">QR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
             </div>
+            <hr className="my-3 border-gray-200 md:mb-2 mb-15" />
+
+
 
             {/* Buttons */}
-            <div className="flex gap-3">
-              <button className="flex-1 cursor-pointer border border-black text-black py-2 rounded-full text-sm hover:bg-gray-100 transition">
-                Add items
-              </button>
-              <button
-              onClick={() => {
-                setIsCartOpen(false);
-                router.push("/Checkout");
-              }}
-              className="flex-1 cursor-pointer bg-primary text-white py-2 rounded-full text-sm hover:bg-orange-600 transition">
-                Checkout
-              </button>
+            <div className="sm:static fixed bottom-0 left-0 w-full bg-[#FFFBF7] md:px-0 px-4 py-3 border-t border-gray-300 sm:border-none z-50"> {/*এই ডিব টি আমি বটম এ ফিক্সড করে রাখতে চাই  শুধু মাত্র মোবাইলে। */}
+              <div className="flex gap-3">
+                <button className="flex-1 cursor-pointer font-medium font-poppins border border-black text-black md:py-2 py-4 rounded-full text-sm hover:bg-gray-100 transition">
+                  Add items
+                </button>
+                <button
+                  onClick={() => {
+                    setIsCartOpen(false);
+                    router.push("/Checkout");
+                  }}
+                  className="flex-1 cursor-pointer font-medium font-poppins bg-primary text-white md:py-2 py-4 rounded-full text-sm hover:bg-orange-600 transition">
+                  Checkout
+                </button>
+              </div>
             </div>
           </div>
 
