@@ -30,7 +30,7 @@ export default function CartSidebar({ isOpen, onClose }) {
       )}
 
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] bg-[#FFFBF7] md:rounded-l-3xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] md:bg-[#FFFBF7] bg-white md:rounded-l-3xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
           } flex flex-col`}
       >
         <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3 custom-scroll">
@@ -168,7 +168,7 @@ export default function CartSidebar({ isOpen, onClose }) {
           {/* Footer */}
 
           <div className="md:pt-4 pt-2"> {/*এই পার্টকে আমি স্টিকি করতে চাই বটমে , যদি প্রডাক্ট বেশি হয় তাহলে সি্িটকি চলে যাবে , যেনো নিচের দিকে চলে যায়। */}
-            <h2 className="font-semibold md:text-lg text-2xl mb-4">Payment summary</h2>
+            <h2 className="font-medium text-gray-800 text-xl mb-4">Payment summary</h2>
 
             {/* Subtotal */}
             <div className="flex justify-between text-sm mb-3">
@@ -191,7 +191,7 @@ export default function CartSidebar({ isOpen, onClose }) {
               <span>Total amount</span>
               <span className="text-black">QR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
             </div>
-            <hr className="my-3 border-gray-200 md:mb-2 mb-15" />
+            <hr className=" my-3 md:border-gray-200 border-0 md:mb-2 mb-15" />
 
 
 

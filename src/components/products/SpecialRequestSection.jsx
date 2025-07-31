@@ -28,8 +28,8 @@ export default function SpecialRequestSection() {
   };
 
   return (
-    <div className="border-t border-gray-300 pt-4">
-      <h3 className="font-semibold text-gray-800 mb-5 text-xl">Special request</h3>
+    <div className="border-t border-gray-300 pt-4 mt-2">
+      <h3 className="font-medium text-gray-800 mb-5 text-xl">Special request</h3>
 
       {/* Gift wrap toggle */}
       <div className="flex items-start justify-between mb-5">
