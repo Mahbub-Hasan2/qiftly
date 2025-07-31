@@ -36,7 +36,7 @@ export default function WhatsappButton() {
       href="https://wa.me/9743067136"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-17 right-4 z-50 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition"
+      className="fixed bottom-17 right-4 z-40 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
