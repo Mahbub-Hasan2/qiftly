@@ -58,7 +58,7 @@ export const getProductsByCollection = async (handle) => {
     }
 
     const products = data.collection.products.edges.map(({ node }) => node);
-    return products;
+    return {products};
   } catch (error) {
     console.error(`Error fetching products for collection "${handle}":`, error.message || error);
     return { products: [], error: error.message || 'Unknown error' };

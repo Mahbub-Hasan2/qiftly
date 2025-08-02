@@ -3,8 +3,9 @@ import { Home, Grid, User, ShoppingBag, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useUI } from '../contexts/UIContext';
 import { useCart } from '../contexts/CartContext';
+import MobileMegaMenu from './MobileMegaMenu';
 
-const BottomNav = () => {
+const BottomNav = ({menuItems}) => {
   const { isMobileSearch, setIsMobileSearch, isFocused, setIsFocused, setIsCartOpen } = useUI();
   const { cartItems } = useCart();
 
@@ -14,7 +15,7 @@ const BottomNav = () => {
     <nav className="fixed bottom-0 w-full bg-white shadow-md border-t border-gray-200 z-50 md:hidden">
       <div className="flex justify-between items-center px-6 py-2">
         <NavItem href="/" icon={<Home size={22} />} label="Home" />
-        <NavItem href="/collections" icon={<Grid size={22} />} label="Collections" />
+        <MobileMegaMenu menuItems={menuItems} />
         <SearchItem
           onClick={() => {
             setIsMobileSearch(!isMobileSearch);

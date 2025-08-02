@@ -5,8 +5,8 @@
   --font-poppins: "Poppins", sans-serif;
    --font-roboto: 'Roboto', sans-serif;
   --breakpoint-3xl: 120rem;
-  --color-primary: oklch(0.5802 0.0993 111.9);
-  --color-secondary: oklch(0.7979 0.1536 88.04);
+  --color-primary: oklch(0.7009 0.201198 44.7666);
+  --color-secondary: oklch(0.9477 0.0391 71.04);
 }
 
 /* ==== Custom Components ==== */

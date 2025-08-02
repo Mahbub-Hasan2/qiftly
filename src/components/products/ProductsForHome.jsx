@@ -13,7 +13,7 @@ export default async function ProductsForHome() {
             <ProductSlider
                 title="New Arrivals "
                 subtitle="🎉 Celebrate Every Moment"
-                products={NewArrivalsAndBestSelling}
+                products={NewArrivalsAndBestSelling.products}
                 defaultCategories={["Best Sellers", "New Arrivals"]}
                 initialActiveCategory="Best Sellers"
                 filterKey="tags"
@@ -22,7 +22,7 @@ export default async function ProductsForHome() {
             <ProductSlider
                 title="Gift by Occasion"
                 subtitle="🎉 Celebrate Every Moment"
-                products={GiftByOccasion}
+                products={GiftByOccasion.products}
                 defaultCategories={["Birthday", "Anniversary", "Eid"]}
                 initialActiveCategory=""
                 filterKey="tags"
@@ -31,7 +31,7 @@ export default async function ProductsForHome() {
             <ProductSlider
                 title="Wall Frames & Islamic Art"
                 subtitle="🎁 Find the perfect gift for anyone"
-                products={WallFramesAndIslamicArt}
+                products={WallFramesAndIslamicArt.products}
                 defaultCategories={["Quranic Verses", "Calligraphy", "Art", "Frame Sets"]}
                 initialActiveCategory=""
                 filterKey="tags"
@@ -40,7 +40,7 @@ export default async function ProductsForHome() {
             <ProductSlider
                 title="Mug & Box Sets"
                 subtitle="✨ Choose what suits best"
-                products={MugAndBoxSets}
+                products={MugAndBoxSets.products}
                 defaultCategories={["Coffee Mug", "Gift Box", "Mugs"]}
                 initialActiveCategory=""
                 filterKey="tags"

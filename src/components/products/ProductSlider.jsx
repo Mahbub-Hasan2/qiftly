@@ -19,6 +19,7 @@ export default function ProductSlider({
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(true);
 
+
   const {
     categories,
     activeCategory,

@@ -12,7 +12,7 @@ export default function Navigations({ menuItems }) {
         <div>
             <Navbar menuItems={menuItems} />
 
-            <BottomNav />
+            <BottomNav menuItems={menuItems} />
 
             {/* ✅ Remove redundant cartItems prop */}
             <CartSidebar

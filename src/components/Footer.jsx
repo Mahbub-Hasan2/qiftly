@@ -65,16 +65,16 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-extrabold mb-4">Follow Us</h3>
           <div className="flex space-x-4 text-xl">
-            <a href="#" className="hover:text-yellow-400">
+            <a href="https://facebook.com/Qiftly/" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">
               <FaFacebookF />
             </a>
-            <a href="#" className="hover:text-yellow-400">
+            <a href="https://instagram.com/qiftlyofficial/" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">
               <FaInstagram />
             </a>
-            <a href="#" className="hover:text-yellow-400">
+            <a href="https://youtube.com/@Qiftly" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">
               <FaYoutube />
             </a>
-            <a href="#" className="hover:text-yellow-400">
+            <a href="https://www.tiktok.com/@qiftly" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">
               <FaTiktok />
             </a>
           </div>

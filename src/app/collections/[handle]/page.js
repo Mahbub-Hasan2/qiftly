@@ -8,8 +8,9 @@ export default async function CollectionPage({ params }) {
 
   if (!handle) return notFound();
 
-  const initialProducts = await getProductsByCollection(handle);
+  const initialProducts  = await getProductsByCollection(handle);
   const allProducts = await getAllProducts();
+  console.log(initialProducts, allProducts)
 
   if (!initialProducts || initialProducts.length === 0) {
     return notFound(); // 404 দেখাবে
@@ -18,7 +19,7 @@ export default async function CollectionPage({ params }) {
 
   return (
     <ClientView
-      initialProducts={initialProducts || []}
+      initialProducts={initialProducts?.products  || []}
       allProducts={allProducts?.products || []}
       title={handle}
     />
