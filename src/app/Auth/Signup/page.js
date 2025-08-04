@@ -1,6 +1,6 @@
 import SignupForm from "@/components/Auth/SignupForm";
 
-export default function Auth() {
+export default function Signup() {
   return (
     <div className="">
       <SignupForm />
