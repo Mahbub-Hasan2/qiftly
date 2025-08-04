@@ -8,6 +8,7 @@ import {
   OccasionTabs_METAOBJECT_QUERY,
   PRODUCT_QUERY,
   NAVIGATION_QUERY,
+  CREATE_CUSTOMER_MUTATION, CUSTOMER_ACCESS_TOKEN_CREATE
 } from './queries';
 
 /**
@@ -259,4 +260,37 @@ export const searchProducts = async (searchTerm) => {
     console.error('Search failed:', err.message || err);
     return [];
   }
+};
+
+
+// lib/data.js
+// lib/data.js
+
+export const createCustomerAccount = async ({ firstName, lastName, email, password }) => {
+  const input = {
+    firstName,
+    lastName,
+    email,
+    password,
+  };
+
+  const result = await shopifyFetch(CREATE_CUSTOMER_MUTATION, { input });
+
+  if (result?.customerCreate?.customerUserErrors?.length > 0) {
+    throw new Error(result.customerCreate.customerUserErrors[0].message);
+  }
+
+  return result?.customerCreate;
+};
+
+export const generateCustomerAccessToken = async ({ email, password }) => {
+  const input = { email, password };
+
+  const result = await shopifyFetch(CUSTOMER_ACCESS_TOKEN_CREATE, { input });
+
+  if (result?.customerAccessTokenCreate?.customerUserErrors?.length > 0) {
+    throw new Error(result.customerAccessTokenCreate.customerUserErrors[0].message);
+  }
+
+  return result?.customerAccessTokenCreate;
 };

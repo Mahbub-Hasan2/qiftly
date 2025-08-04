@@ -1,4 +1,4 @@
-// src/lib/shopify.js
+// lib/shopify.js
 import axios from 'axios';
 
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
@@ -18,8 +18,7 @@ const shopifyFetch = async (query, variables = {}) => {
       data: JSON.stringify({ query, variables }),
     });
 
-    // GraphQL এর error থাকলে সেটাও ধরবে
-    if (result.data.errors && result.data.errors.length > 0) {
+    if (result.data.errors?.length > 0) {
       const message = result.data.errors.map((e) => e.message).join(', ');
       throw new Error(message);
     }
@@ -31,13 +30,7 @@ const shopifyFetch = async (query, variables = {}) => {
     return result.data.data;
   } catch (error) {
     console.error('Shopify fetch error:', error.message || error);
-
-    const message =
-      error?.message ||
-      'দুঃখিত, সার্ভারের সাথে সংযোগে সমস্যা হচ্ছে। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
-
-    // মুল error message preserve করে throw করো
-    throw new Error(message);
+    throw new Error(error?.message || 'সার্ভারের সাথে সংযোগে সমস্যা হচ্ছে।');
   }
 };
 
