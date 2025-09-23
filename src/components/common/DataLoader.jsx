@@ -15,7 +15,7 @@ export default function DataLoader({ data, error, loading = false, children }) {
   }
 
   if (!data || (Array.isArray(data) && data.length === 0)) {
-    console.log(data)
+    // console.log(data)
     return (
       <div className="text-center py-6">
         <p className="text-gray-600">কোনো তথ্য পাওয়া যায়নি।</p>

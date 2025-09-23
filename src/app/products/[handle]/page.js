@@ -40,7 +40,7 @@ export default async function ProductPage({ params }) {
   if (!product) return notFound();
 
   const { products: allProducts } = await getAllProducts();
-
+  
   return (
     <div className="max-w-7xl mx-auto px-4 py-5 md:py-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-10 items-start">

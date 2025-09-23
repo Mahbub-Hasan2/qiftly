@@ -42,7 +42,7 @@ export default function OccasionContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(newOccationData);
+    // console.log(newOccationData);
 
     // todo
   };

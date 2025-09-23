@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
@@ -8,10 +8,11 @@ export const useCart = () => useContext(CartContext);
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
-  const [specialRequestMessage, setSpecialRequestMessage] = useState(""); 
-// console.log(specialRequestMessage)
+  const [specialRequestMessage, setSpecialRequestMessage] = useState("");
+
   const giftWrapItem = {
     id: "gift_wrap",
+    variantId: "gift_wrap", // ✅ VariantId assign করা হলো
     title: "🎁 Gift Wrapping",
     price: 5,
     currency: "QAR",
@@ -19,75 +20,88 @@ export function CartProvider({ children }) {
     quantity: 1,
   };
 
-  const formatProduct = (product) => ({
+  const formatProduct = (product, selectedVariant) => ({
     id: product.id,
+    variantId: selectedVariant?.id || "", // Variant ID
     title: product.title,
-    price: parseFloat(product?.priceRange?.minVariantPrice?.amount || 0),
-    currency: product?.priceRange?.minVariantPrice?.currencyCode || "QAR",
-    image: product?.images?.edges?.[0]?.node?.url || "/placeholder.jpg",
+    price: parseFloat(
+      selectedVariant?.price?.amount || product?.priceRange?.minVariantPrice?.amount || 0
+    ),
+    currency: selectedVariant?.price?.currencyCode || product?.priceRange?.minVariantPrice?.currencyCode || "QAR",
+    image: selectedVariant?.image?.url || product?.images?.edges?.[0]?.node?.url || "/placeholder.jpg",
     quantity: 1,
   });
 
-  // Load from localStorage on mount
+  // LocalStorage থেকে cart load করা
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('cart');
-      if (stored) {
-        setCartItems(JSON.parse(stored));
-      }
+      const storedCart = localStorage.getItem('cart');
+      if (storedCart) setCartItems(JSON.parse(storedCart));
+
+      const storedMessage = localStorage.getItem('specialRequestMessage');
+      if (storedMessage) setSpecialRequestMessage(storedMessage);
     } catch (err) {
-      console.error('Error loading cart:', err);
+      console.error('Error loading cart from localStorage:', err);
     }
   }, []);
 
-  // Save to localStorage on cart change
+  // LocalStorage এ cart save করা
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
+    try {
+      localStorage.setItem('cart', JSON.stringify(cartItems));
+      localStorage.setItem('specialRequestMessage', specialRequestMessage);
+    } catch (err) {
+      console.error('Error saving cart to localStorage:', err);
+    }
+  }, [cartItems, specialRequestMessage]);
 
-  const addToCart = (product) => {
+  // Cart এ item add করা
+  const addToCart = (product, selectedVariant) => {
     setCartItems((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
+      const exists = prev.find(
+        (item) => item.variantId === selectedVariant?.id
+      );
+
       if (exists) {
         return prev.map((item) =>
-          item.id === product.id
+          item.variantId === selectedVariant?.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...prev, formatProduct(product)];
+
+      return [...prev, formatProduct(product, selectedVariant)];
     });
   };
 
-  const updateQuantity = (id, type) => {
+  // Cart এ quantity update করা
+  const updateQuantity = (variantId, type) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: type === 'inc' ? item.quantity + 1 : Math.max(1, item.quantity - 1),
-            }
+        item.variantId === variantId
+          ? { ...item, quantity: type === 'inc' ? item.quantity + 1 : Math.max(1, item.quantity - 1) }
           : item
       )
     );
   };
 
+  // Cart থেকে item remove করা
+  const removeItem = (variantId) => {
+    setCartItems((prev) => prev.filter((item) => !(item.variantId === variantId)));
+  };
+
+  // Gift wrap add/remove
   const addGiftWrap = () => {
-    setCartItems((prev) => {
-      const exists = prev.find((item) => item.id === "gift_wrap");
-      if (exists) return prev;
-      return [...prev, giftWrapItem];
-    });
+    setCartItems((prev) =>
+      prev.some((item) => item.id === "gift_wrap") ? prev : [...prev, giftWrapItem]
+    );
   };
 
   const removeGiftWrap = () => {
     setCartItems((prev) => prev.filter((item) => item.id !== "gift_wrap"));
   };
 
-  const removeItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
+  // Total calculation
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -102,8 +116,8 @@ export function CartProvider({ children }) {
         totalPrice,
         addGiftWrap,
         removeGiftWrap,
-         specialRequestMessage,  
-        setSpecialRequestMessage,  
+        specialRequestMessage,
+        setSpecialRequestMessage,
       }}
     >
       {children}

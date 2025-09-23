@@ -41,7 +41,7 @@ export default function OrderSummary() {
                   QAR {(item.price * item.quantity).toFixed(2)}
                 </span>
                 <button
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => removeItem(item.variantId)}
                 >
                   <Trash2
                     size={40}

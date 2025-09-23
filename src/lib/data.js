@@ -1,4 +1,3 @@
-import shopifyFetch from './shopify';
 import {
   ALL_PRODUCTS_QUERY,
   HERO_SLIDER_METAOBJECT_QUERY,
@@ -8,8 +7,12 @@ import {
   OccasionTabs_METAOBJECT_QUERY,
   PRODUCT_QUERY,
   NAVIGATION_QUERY,
-  CREATE_CUSTOMER_MUTATION, CUSTOMER_ACCESS_TOKEN_CREATE
+  CREATE_CUSTOMER_MUTATION, CUSTOMER_ACCESS_TOKEN_CREATE,
+  CART_CREATE_MUTATION, 
+  CHECKOUT_CREATE_MUTATION,
+  CREATE_DRAFT_ORDER_MUTATION
 } from './queries';
+import { shopifyAdminFetch, shopifyFetch } from './shopify';
 
 /**
  * Fetch all products
@@ -293,4 +296,94 @@ export const generateCustomerAccessToken = async ({ email, password }) => {
   }
 
   return result?.customerAccessTokenCreate;
+};
+
+
+
+function getVariantId(item) {
+  return item.variantId;
+}
+
+export const createCheckout = async (cartItems, address, email) => {
+  if (!Array.isArray(cartItems) || !cartItems.length) {
+    throw new Error("Your cart is empty.");
+  }
+
+  const lineItems = cartItems
+    .filter(item => item.variantId)
+    .map(item => ({
+      variantId: getVariantId(item),
+      quantity: Number(item.quantity || 1),
+    }));
+
+  const input = {
+    email: email || "guest@example.com", // fallback email
+    lineItems,
+    shippingAddress: {
+      address1: address.street,
+      city: address.city,
+      country: "Qatar",
+      phone: address.phone,
+      firstName: (address.fullName || "").split(" ")[0] || "",
+      lastName: (address.fullName || "").split(" ").slice(1).join(" ") || "",
+      zip: address.zip || "",
+    },
+  };
+
+  // console.log("checkout input", input);
+
+  const res = await shopifyFetch(CHECKOUT_CREATE_MUTATION, { input });
+  const errors = res?.checkoutCreate?.checkoutUserErrors || [];
+  if (errors.length) throw new Error(errors.map(e => e.message).join(", "));
+
+  const checkout = res?.checkoutCreate?.checkout;
+  if (!checkout?.webUrl) throw new Error("Checkout created but no webUrl returned.");
+  return checkout;
+};
+
+
+
+
+export const createDraftOrder = async (cartItems, address, email) => {
+  // console.log(cartItems)
+  if (!Array.isArray(cartItems) || !cartItems.length) {
+    throw new Error("Your cart is empty.");
+  }
+
+  // Ensure variantId is in GraphQL gid format
+  const lineItems = cartItems.map((item) => {
+    let variantGid = item.variantId;
+    if (!String(variantGid).startsWith("gid://")) {
+      variantGid = `gid://shopify/ProductVariant/${item.variantId}`;
+    }
+    return {
+      variantId: variantGid,
+      quantity: Number(item.quantity || 1),
+    };
+  });
+
+  const input = {
+    lineItems,
+    email: email || "guest@example.com",
+    phone: address.phone,
+    shippingAddress: {
+      address1: address.street,
+      city: address.city,
+      country: "Qatar",
+      phone: address.phone,
+      firstName: (address.fullName || "").split(" ")[0] || "",
+      lastName: (address.fullName || "").split(" ").slice(1).join(" ") || "",
+      zip: address.zip || "",
+    },
+    tags: ["COD"], // Optional, for filtering COD orders
+    useCustomerDefaultAddress: false,
+  };
+
+  // console.log("Draft Order Input:", input);
+
+  const res = await shopifyAdminFetch(CREATE_DRAFT_ORDER_MUTATION, { input });
+  const errors = res?.draftOrderCreate?.userErrors || [];
+  if (errors.length) throw new Error(errors.map((e) => e.message).join(", "));
+
+  return res?.draftOrderCreate?.draftOrder;
 };

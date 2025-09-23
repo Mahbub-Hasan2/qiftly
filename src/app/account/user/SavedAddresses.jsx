@@ -113,7 +113,7 @@ const AddressForm = ({ onClickBack, addressData, isEditing }) => {
       defaultAddress: defaultAddress ? defaultAddress : null,
     };
 
-    console.log(formData);
+    // console.log(formData);
 
     if (isEditing) {
       // API request for updating ...

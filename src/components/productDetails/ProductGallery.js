@@ -55,6 +55,7 @@ export default function ProductGallery({ product }) {
 
   const activeImage = imageUrls[activeIndex] || "/placeholder.jpg";
 
+
   return (
     <div className="space-y-4">
       {/* Main Image with swipe and smooth fade */}
@@ -113,6 +114,7 @@ export default function ProductGallery({ product }) {
           );
         })}
       </div>
+       
     </div>
   );
 }

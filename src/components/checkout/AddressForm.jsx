@@ -25,7 +25,7 @@ export default function AddressForm({onNext}) {
   
 
   const [formData, setFormData] = useState({
-    area: "",
+    city: "",
     addressType: "Office",
     Building: "",
     company: "",
@@ -48,7 +48,7 @@ export default function AddressForm({onNext}) {
 
   const validate = () => {
     const newErrors = {};
-    if (!isNotEmpty(formData.area)) newErrors.area = "Area is required";
+    if (!isNotEmpty(formData.city)) newErrors.city = "city is required";
     if (!isNotEmpty(formData.Building)) newErrors.Building = "Building name is required";
 
     if (formData.addressType === "Office") {
@@ -96,7 +96,6 @@ export default function AddressForm({onNext}) {
     const payload = { ...formData };
     addAddress(payload);
      onNext(); 
-    console.log("✅ Saved Address:", payload);
   };
 
 
@@ -105,9 +104,9 @@ export default function AddressForm({onNext}) {
     <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto md:p-4 space-y-4 bg-white rounded-xl">
       <h2 className="text-xl font-semibold">New Address</h2>
 
-      <FieldWrapper name="area" fieldRefs={fieldRefs}>
+      <FieldWrapper name="city" fieldRefs={fieldRefs}>
         <label className="block text-sm">Area</label>
-        <Input name="area" value={formData.area} onChange={handleChange} placeholder="Al Maamoura" />
+        <Input name="city" value={formData.area} onChange={handleChange} placeholder="Al Rayyan" />
         {errors.area && <p className="text-sm text-red-500 mt-1">{errors.area}</p>}
       </FieldWrapper>
 

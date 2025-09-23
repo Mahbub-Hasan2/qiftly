@@ -22,6 +22,16 @@ export const ALL_PRODUCTS_QUERY = `{
               currencyCode
             }
           }
+            
+variants(first: 1) {
+          edges {
+            node {
+              id
+              title
+            }
+          }
+        }
+
         }
       }
     }
@@ -46,36 +56,53 @@ export const ALL_COLLECTIONS_QUERY = `{
 
 export const COLLECTION_BY_HANDLE_QUERY = `
   query CollectionByHandle($handle: String!) {
-  collection(handle: $handle) {
-    title
-    products(first: 10) {
-      edges {
-        node {
-          id
-          title
-          handle
-          tags
-          images(first: 1) {
-            edges {
-              node {
-                url
-                altText
+    collection(handle: $handle) {
+      title
+      products(first: 10) {
+        edges {
+          node {
+            id
+            title
+            handle
+            tags
+            images(first: 1) {
+              edges {
+                node {
+                  url
+                  altText
+                }
               }
             }
-          }
-          priceRange {
-            minVariantPrice {
-              amount
-              currencyCode
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            variants(first: 10) {
+              edges {
+                node {
+                  id
+                  title
+                  image {
+                    originalSrc
+                    altText
+                  }
+                  availableForSale
+                  selectedOptions {
+                    name
+                    value
+                  }
+                }
+              }
             }
           }
         }
       }
     }
   }
-}
-
 `;
+
 
 
 export const HERO_SLIDER_METAOBJECT_QUERY = `{
@@ -287,6 +314,61 @@ export const CUSTOMER_ACCESS_TOKEN_CREATE = `
       }
       customerUserErrors {
         code
+        field
+        message
+      }
+    }
+  }
+`;
+
+
+// lib/queries.js
+// lib/queries.js
+
+export const CHECKOUT_CREATE_MUTATION = `
+mutation checkoutCreate($input: CheckoutCreateInput!) {
+  checkoutCreate(input: $input) {
+    checkout {
+      id
+      webUrl
+      lineItems(first: 10) {
+        edges {
+          node {
+            title
+            quantity
+          }
+        }
+      }
+      shippingAddress {
+        firstName
+        lastName
+        address1
+        city
+        country
+        phone
+      }
+    }
+    checkoutUserErrors {
+      field
+      message
+    }
+  }
+}
+`;
+
+
+
+// lib/queries.js
+export const CREATE_DRAFT_ORDER_MUTATION = `
+  mutation draftOrderCreate($input: DraftOrderInput!) {
+    draftOrderCreate(input: $input) {
+      draftOrder {
+        id
+        name
+        invoiceUrl
+        status
+      }
+      userErrors {
         field
         message
       }

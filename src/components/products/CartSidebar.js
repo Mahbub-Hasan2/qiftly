@@ -69,7 +69,7 @@ export default function CartSidebar({ isOpen, onClose }) {
                             {typeof item.price === "number" ? item.price.toFixed(2) : "0.00"}
                           </p>
                         </div>
-                        <button onClick={() => removeItem(item.id)} title="Remove">
+                        <button onClick={() => removeItem(item.variantId)} title="Remove">
                           <Trash2
                             size={40}
                             className="cursor-pointer p-3 mb-5 bg-gray-50 text-primary rounded-full"
@@ -80,7 +80,7 @@ export default function CartSidebar({ isOpen, onClose }) {
                       <div className="flex justify-end items-end">
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => updateQuantity(item.id, "dec")}
+                            onClick={() => updateQuantity(item.variantId, "dec")}
                             className="w-9 h-9 bg-gray-50 rounded-full text-xl"
                           >
                             −
@@ -89,7 +89,7 @@ export default function CartSidebar({ isOpen, onClose }) {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQuantity(item.id, "inc")}
+                            onClick={() => updateQuantity(item.variantId, "inc")}
                             className="w-9 h-9 bg-gray-50 rounded-full text-xl"
                           >
                             +
@@ -129,7 +129,7 @@ export default function CartSidebar({ isOpen, onClose }) {
                           {typeof item.price === "number" ? item.price.toFixed(2) : "0.00"}
                         </p>
                       </div>
-                      <button onClick={() => removeItem(item.id)} title="Remove">
+                      <button onClick={() => removeItem(item.variantId)} title="Remove">
                         <Trash2
                           size={40}
                           className="cursor-pointer p-3 mb-5 bg-gray-50 text-primary rounded-full"
@@ -140,7 +140,7 @@ export default function CartSidebar({ isOpen, onClose }) {
                     <div className="flex justify-end items-end">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => updateQuantity(item.id, "dec")}
+                          onClick={() => updateQuantity(item.variantId, "dec")}
                           className="cursor-pointer w-9 h-9 bg-gray-50 rounded-full text-xl"
                         >
                           −
@@ -149,7 +149,7 @@ export default function CartSidebar({ isOpen, onClose }) {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.id, "inc")}
+                          onClick={() => updateQuantity(item.variantId, "inc")}
                           className="cursor-pointer w-9 h-9 bg-gray-50 rounded-full text-xl"
                         >
                           +

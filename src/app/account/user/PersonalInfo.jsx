@@ -22,7 +22,7 @@ const handleChange = (e) => {
 
   const handleUpdateUser = (e) => {
     e.preventDefault();
-    console.log(profileData)
+    // console.log(profileData)
     // TODO
   }
 
