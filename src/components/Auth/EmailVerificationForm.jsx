@@ -1,126 +1,118 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { sendOtpToEmail } from "@/lib/email/sendOtpToEmail";
-import { verifyOtp } from "@/lib/email/verifyOtp";
+import { useState, useEffect, useRef } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function EmailVerificationForm({ email, onVerified }) {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [timer, setTimer] = useState(180); // 3 minutes
-  const [resending, setResending] = useState(false);
-  const [error, setError] = useState("");
+  const [otp, setOtp] = useState("");
+  const [message, setMessage] = useState("");
+  const [timer, setTimer] = useState(180);
+  const [resendAllowed, setResendAllowed] = useState(false);
 
+  const otpSentRef = useRef(false); // ✨ Prevent multiple OTP sends on re-render
+
+  // ✅ OTP send + timer setup
   useEffect(() => {
-    sendOtp();
-  }, []);
+    if (!email) return; // ✨ Email না থাকলে কিছু হবে না
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (timer > 0) setTimer(timer - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timer]);
-
-  const handleChange = (value, index) => {
-    if (/^[0-9]?$/.test(value)) {
-      const updated = [...otp];
-      updated[index] = value;
-      setOtp(updated);
-      if (value && index < 5) {
-        document.getElementById(`otp-${index + 1}`).focus();
+    const sendOtp = async () => {
+      try {
+        const res = await fetch("/api/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        console.log("Initial OTP send response:", data);
+      } catch (err) {
+        console.error("Failed to send OTP:", err);
+        setMessage("Failed to send OTP");
       }
-    }
-  };
+    };
 
-  const sendOtp = async () => {
-    try {
-      await sendOtpToEmail(email);
-      setTimer(180);
-    } catch (err) {
-      setError(err.message);
+    if (!otpSentRef.current) {
+      sendOtp(); // ✨ Component load হতেই একবার OTP পাঠাও
+      otpSentRef.current = true;
     }
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const code = otp.join("");
-    if (code.length !== 6) {
-      setError("সঠিকভাবে ৬ ডিজিট OTP দিন।");
+    const interval = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 1) { 
+          clearInterval(interval); 
+          setResendAllowed(true); 
+          return 0; 
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [email]);
+
+  // ✅ OTP verify
+  const handleVerify = async () => {
+    console.log(otp, email)
+    if (!otp) {
+      setMessage("Please enter OTP");
       return;
     }
 
     try {
-      const result = await verifyOtp(email, code);
-      if (result.verified) {
-        onVerified();
+      const res = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+      const data = await res.json();
+console.log(data)
+      if (data.verified) {
+        onVerified(); // ✅ Parent call after verification
       } else {
-        setError("OTP ভুল হয়েছে।");
+        setMessage(data.message || "Invalid OTP");
       }
     } catch (err) {
-      setError(err.message);
+      console.error("OTP verify error:", err);
+      setMessage("Server error verifying OTP");
     }
-  };
+  }
+
+  // ✅ OTP resend
+  const handleResend = async () => {
+    setMessage("");
+    setTimer(180);
+    setResendAllowed(false);
+
+    try {
+      const res = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      console.log("Resend OTP response:", data);
+    } catch (err) {
+      console.error("Failed to resend OTP:", err);
+      setMessage("Failed to resend OTP");
+      setResendAllowed(true);
+    }
+  }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white rounded-xl border p-6 max-w-sm mx-auto"
-    >
-      <h2 className="text-center text-lg font-semibold mb-4">
-        Create your Evaly account
-      </h2>
-      <p className="text-sm text-center text-muted-foreground mb-3">
-        To Confirm The Email Enter 6 Digit OTP Here
-      </p>
-
-      <div className="flex justify-between gap-2 mb-3">
-        {otp.map((digit, index) => (
-          <input
-            key={index}
-            id={`otp-${index}`}
-            type="text"
-            inputMode="numeric"
-            maxLength="1"
-            value={digit}
-            onChange={(e) => handleChange(e.target.value, index)}
-            className="w-10 h-12 text-center border border-gray-300 rounded"
-          />
-        ))}
-      </div>
-
-      {error && (
-        <p className="text-sm text-red-500 text-center mb-2">{error}</p>
-      )}
-
-      {timer > 0 ? (
-        <p className="text-sm text-green-600 text-center mb-4">
-          Resend After {("0" + Math.floor(timer / 60)).slice(-2)}:
-          {("0" + (timer % 60)).slice(-2)}
-        </p>
-      ) : (
-        <button
-          type="button"
-          onClick={sendOtp}
-          disabled={resending}
-          className="text-sm text-blue-600 underline mb-4"
-        >
-          {resending ? "Sending..." : "Resend OTP"}
-        </button>
-      )}
-
-      <button
-        type="submit"
-        className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
-      >
-        Create Account
-      </button>
-
-      <p className="text-sm text-center mt-3">
-        Already have an account?{" "}
-        <a href="/login" className="text-blue-600 underline">
-          Sign in
-        </a>
-      </p>
-    </form>
+    <div className="max-w-md mx-auto p-6 bg-white rounded shadow text-center">
+      <h2 className="text-xl mb-4">Verify Email</h2>
+      <p>OTP sent to: {email}</p>
+      <Input 
+        type="text" 
+        value={otp} 
+        onChange={e => setOtp(e.target.value)} 
+        placeholder="Enter OTP" 
+        className="my-3" 
+      />
+      <Button onClick={handleVerify} className="w-full mb-2">Verify</Button>
+      <p>{timer > 0 ? `Time left: ${Math.floor(timer / 60)}:${timer % 60}` : "OTP expired"}</p>
+      {resendAllowed && <Button onClick={handleResend} className="mt-2">Resend OTP</Button>}
+      {message && <p className="text-red-500 mt-2">{message}</p>}
+    </div>
   );
 }

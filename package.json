@@ -11,8 +11,9 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@shopify/hydrogen": "^2025.5.0",
-    "axios": "^1.10.0",
+    "axios": "^1.12.2",
     "framer-motion": "^12.23.12",
+    "ioredis": "^5.8.0",
     "lucide-react": "^0.525.0",
     "motion": "^12.23.5",
     "next": "15.3.5",

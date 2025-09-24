@@ -1,39 +1,40 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-
-const otpStore = new Map(); // ⚠️ Production-এ DB ব্যবহার করা উচিত
+import redis from "@/lib/redis";
 
 export async function POST(req) {
   const { email } = await req.json();
-
+console.log(email)
   if (!email || !email.includes("@")) {
-    return NextResponse.json({ message: "Invalid email address" }, { status: 400 });
+    return NextResponse.json({ message: "Invalid email" }, { status: 400 });
   }
 
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  otpStore.set(email, { code: otp, expires: Date.now() + 3 * 60 * 1000 }); // 3 মিনিটের জন্য OTP
-console.log("email and passs =================",process.env.OTP_EMAIL,process.env.OTP_PASSWORD,)
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.OTP_EMAIL,
-      pass: process.env.OTP_PASSWORD,
-    },
-  });
-
   try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save OTP in Redis with 3 minutes expiry
+    await redis.set(`otp:${email}`, otp, "EX", 180);
+
     await transporter.sendMail({
-      from: process.env.OTP_EMAIL,
+      from: `"Qiftly" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Your OTP Code",
-      html: `<h3>Your OTP Code: ${otp}</h3><p>This code will expire in 3 minutes.</p>`,
+      text: `Your OTP is ${otp}`,
     });
 
     return NextResponse.json({ message: "OTP sent" });
-  } catch (error) {
-    console.error("Email send error:", error);
+  } catch (err) {
+    console.error(err);
     return NextResponse.json({ message: "Failed to send OTP" }, { status: 500 });
   }
 }
-
-export { otpStore };
