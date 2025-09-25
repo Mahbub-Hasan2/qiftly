@@ -1,40 +1,46 @@
+// src/app/api/send-otp/route.js
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import redis from "@/lib/redis";
+import { saveOtp } from "@/lib/otpStore";
 
 export async function POST(req) {
-  const { email } = await req.json();
-console.log(email)
-  if (!email || !email.includes("@")) {
-    return NextResponse.json({ message: "Invalid email" }, { status: 400 });
-  }
-
   try {
+    const { email } = await req.json();
+
+    if (!email || !email.includes("@")) {
+      return NextResponse.json({ success: false, message: "Invalid email" }, { status: 400 });
+    }
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save OTP in redis (TTL 3 minutes)
+    await saveOtp(email, otp, 180);
+
+    // nodemailer transporter (Gmail example)
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: 587,
-      secure: false,
+      port: Number(process.env.SMTP_PORT || 587),
+      secure: process.env.SMTP_SECURE === "true" ? true : false, // true for 465
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
     });
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // Save OTP in Redis with 3 minutes expiry
-    await redis.set(`otp:${email}`, otp, "EX", 180);
-
+    // Send email
     await transporter.sendMail({
       from: `"Qiftly" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: "Your OTP Code",
-      text: `Your OTP is ${otp}`,
+      subject: "Your Qiftly OTP",
+      text: `Your OTP code is: ${otp}. It will expire in 3 minutes.`,
+      html: `<p>Your OTP code is: <b>${otp}</b></p><p>It will expire in 3 minutes.</p>`,
     });
 
-    return NextResponse.json({ message: "OTP sent" });
+    console.log("OTP sent to", email);
+    return NextResponse.json({ success: true, message: "OTP sent" });
   } catch (err) {
-    console.error(err);
-    return NextResponse.json({ message: "Failed to send OTP" }, { status: 500 });
+    console.error("send-otp error:", err);
+    return NextResponse.json({ success: false, message: "Failed to send OTP" }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
+// src/components/Auth/RegisterForm.jsx
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import EmailVerificationForm from "./EmailVerificationForm";
@@ -11,7 +12,7 @@ export default function RegisterForm() {
   const [showVerification, setShowVerification] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const otpSentRef = useRef(false); // ✨ Prevent multiple OTP sends
+  const otpSentRef = useRef(false);
 
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
@@ -43,16 +44,15 @@ export default function RegisterForm() {
         setSubmitted(true);
         setShowVerification(false);
         setFormData({ firstName:"", lastName:"", email:"", password:"", confirmPassword:"" });
-        otpSentRef.current = false; // Reset OTP flag for next registration
-      } else setErrors({ email: data.error });
+        otpSentRef.current = false; // reset for next time
+      } else setErrors({ email: data.error || "Registration failed" });
     } catch(err){ setErrors({ email:"Server error" }); }
   }
 
-  // ✅ Send OTP automatically when showVerification becomes true
+  // When showVerification toggles true — send OTP (only once)
   useEffect(() => {
-    if(showVerification && formData.email && !otpSentRef.current){
-      console.log(otpSentRef.current)
-      const sendOtp = async () => {
+    if (showVerification && formData.email && !otpSentRef.current) {
+      (async () => {
         try {
           const res = await fetch("/api/send-otp", {
             method: "POST",
@@ -60,18 +60,16 @@ export default function RegisterForm() {
             body: JSON.stringify({ email: formData.email }),
           });
           const data = await res.json();
-          console.log("OTP sent:", data);
-          otpSentRef.current = true; // ✨ Mark OTP as sent
+          console.log("OTP send response:", data);
+          otpSentRef.current = true;
         } catch (err) {
-          console.error("Failed to send OTP:", err);
+          console.error("Error sending OTP from RegisterForm:", err);
         }
-      };
-      sendOtp();
+      })();
     }
   }, [showVerification, formData.email]);
 
-  if(showVerification) 
-    return <EmailVerificationForm email={formData.email} onVerified={handleVerified} />
+  if (showVerification) return <EmailVerificationForm email={formData.email} onVerified={handleVerified} />
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded shadow">

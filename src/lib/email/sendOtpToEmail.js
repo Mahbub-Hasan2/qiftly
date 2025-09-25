@@ -1,3 +1,4 @@
+// src/lib/email/sendOtpToEmail.js
 import axios from "axios";
 
 export async function sendOtpToEmail(email) {
