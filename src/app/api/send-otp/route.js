@@ -37,7 +37,7 @@ export async function POST(req) {
       html: `<p>Your OTP code is: <b>${otp}</b></p><p>It will expire in 3 minutes.</p>`,
     });
 
-    console.log("OTP sent to", email);
+    console.log("OTP sent to", email, otp);
     return NextResponse.json({ success: true, message: "OTP sent" });
   } catch (err) {
     console.error("send-otp error:", err);

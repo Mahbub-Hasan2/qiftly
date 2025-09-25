@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function EmailVerificationForm({ email, onVerified }) {
+export default function EmailVerificationForm({errors, email, onVerified }) {
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
   const [timer, setTimer] = useState(180);
@@ -34,6 +34,7 @@ export default function EmailVerificationForm({ email, onVerified }) {
         body: JSON.stringify({ email, otp }),
       });
       const data = await res.json();
+      console.log('verifiy data =', data)
       if (data.verified) {
         onVerified();
       } else {
@@ -73,6 +74,7 @@ export default function EmailVerificationForm({ email, onVerified }) {
       <p>{timer > 0 ? `Time left: ${Math.floor(timer / 60)}:${String(timer % 60).padStart(2, "0")}` : "OTP expired"}</p>
       {resendAllowed && <Button onClick={handleResend} className="mt-2">Resend OTP</Button>}
       {message && <p className="text-red-500 mt-2">{message}</p>}
+      {errors && <p className="text-red-500 mt-2">{errors?.email}</p>}
     </div>
   );
 }

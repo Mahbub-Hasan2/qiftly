@@ -40,6 +40,7 @@ export default function RegisterForm() {
     try{
       const res = await fetch("/api/register", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(formData)});
       const data = await res.json();
+      console.log('registrd data= ', data) // {customer: {…}}customer: email: "alubuluqatar@gmail.com"id: "gid://shopify/Customer/8752101884161"[[Prototype]]: Object[[Prototype]]: Object
       if(res.ok) {
         setSubmitted(true);
         setShowVerification(false);
@@ -69,7 +70,7 @@ export default function RegisterForm() {
     }
   }, [showVerification, formData.email]);
 
-  if (showVerification) return <EmailVerificationForm email={formData.email} onVerified={handleVerified} />
+  if (showVerification) return <EmailVerificationForm errors={errors} email={formData.email} onVerified={handleVerified} />
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded shadow">
