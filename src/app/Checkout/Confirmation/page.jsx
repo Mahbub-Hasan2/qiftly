@@ -24,13 +24,13 @@ export default function Confirmation() {
 
     return (
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-5 gap-6 p-2 max-w-screen-lg mx-auto">
-            <div className="lg:col-span-3 space-y-6">
+            <div className="lg:sticky  lg:col-span-3 space-y-6">
                 <OrderConfirmation />
             </div>
 
             {/* মোবাইলে ড্রপডাউন */}
             {isMobile ? (
-                <div className="lg:hidden">
+                <div className="lg:sticky  lg:hidden">
                     <button
                         className="w-full bg-[#FFFBF7] border border-gray-200 rounded-xl p-3 text-left font-semibold flex justify-between items-center"
                         onClick={() => setShowSummary(!showSummary)}
@@ -60,7 +60,7 @@ export default function Confirmation() {
                 </div>
             ) : (
                 // ডেক্সটপে নরমালি দেখাবে
-                <div className="lg:col-span-2 bg-[#FFFBF7] border border-gray-100 rounded-xl top-6 h-fit">
+                <div className="lg:sticky  lg:col-span-2 bg-[#FFFBF7] border border-gray-100 rounded-xl top-6 h-fit">
                     <ConfirmationSummary />
                 </div>
             )}
