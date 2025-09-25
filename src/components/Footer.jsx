@@ -4,6 +4,7 @@ import Link from "next/link";
 import QiftlyLogo from "../assets/images/Qiftly_logo__2_.png"
 import Image from "next/image";
 import WhatsappButton from "./ui/WhatsappButton";
+import FooterNewsletter from "./ui/FooterNewsletter";
 
 export default function Footer() {
   return (
@@ -30,25 +31,7 @@ export default function Footer() {
         </div>
 
         {/* Newsletter */}
-        <div>
-          <h3 className="text-lg font-extrabold mb-4 flex items-center gap-2">
-            <FiMail /> Newsletter
-          </h3>
-          <p className="text-sm font-semibold mb-2 text-secondary">Get 10% instant discount on your first order!</p>
-          <form className="flex">
-            <input
-              type="email"
-              placeholder="Your email"
-              className="p-2 w-full text-black rounded-l bg-white outline-0 border border-gray-200"
-            />
-            <button
-              type="submit"
-              className="bg-primary hover:bg-primary text-white px-4 rounded-r cursor-pointer"
-            >
-              Subscribe
-            </button>
-          </form>
-        </div>
+        <FooterNewsletter />
 
         {/* Useful Links */}
         <div>
