@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAddress } from "../contexts/AddressContext";
-  
+
 const FieldWrapper = ({ name, fieldRefs, children }) => {
   return (
     <div
@@ -19,48 +19,56 @@ const FieldWrapper = ({ name, fieldRefs, children }) => {
   );
 };
 
-export default function AddressForm({onNext}) {
+const CITIES = ["Doha", "Al Rayyan", "Al Wakrah", "Al Khor", "Al Shamal"];
+
+export default function AddressForm({ onNext }) {
   const { addAddress } = useAddress();
   const fieldRefs = useRef({});
-  
 
   const [formData, setFormData] = useState({
     city: "",
+    email: "",
     addressType: "Office",
     Building: "",
     company: "",
-    apartmentNumber: "",
+    apartment: "",
     floor: "",
     street: "",
-    phone: "",
+    phone: "+974",
     directions: "",
-    label: "",
   });
-
-
-
 
   const [errors, setErrors] = useState({});
 
-  const isNotEmpty = (val) => val.trim().length > 1;
-  const isValidFloor = (val) => val.trim().length > 0;
-  const isValidPhone = (val) => /^\+?[0-9]{7,15}$/.test(val.trim());
+  // Validation functions
+  const isNotEmpty = (val) => val.trim().length >= 1;
+
+  const isValidFloor = (val) => val.trim().length >= 1;
+
+  const isValidPhone = (val) => {
+    const cleaned = val.replace(/\s+/g, ""); // spaces allowed in input but ignored for validation
+    return /^\+974[0-9]{8}$/.test(cleaned);
+  };
+
+  const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
 
   const validate = () => {
     const newErrors = {};
-    if (!isNotEmpty(formData.city)) newErrors.city = "city is required";
+    if (!isNotEmpty(formData.city)) newErrors.city = "City is required";
     if (!isNotEmpty(formData.Building)) newErrors.Building = "Building name is required";
+
+    if (!isValidEmail(formData.email)) newErrors.email = "Valid email is required";
 
     if (formData.addressType === "Office") {
       if (!isNotEmpty(formData.company)) newErrors.company = "Company is required";
       if (!isNotEmpty(formData.floor)) newErrors.floor = "Floor is required";
     } else if (formData.addressType === "Apartment") {
-      if (!isValidFloor(formData.apartmentNumber)) newErrors.apartmentNumber = "Apartment number is required";
+      if (!isValidFloor(formData.apartment)) newErrors.apartment = "Apartment number is required";
       if (!isValidFloor(formData.floor)) newErrors.floor = "Floor is required";
     }
 
     if (!isNotEmpty(formData.street)) newErrors.street = "Street is required";
-    if (!isValidPhone(formData.phone)) newErrors.phone = "Valid phone number is required";
+    if (!isValidPhone(formData.phone)) newErrors.phone = "Valid Qatar phone number is required";
     return newErrors;
   };
 
@@ -76,7 +84,7 @@ export default function AddressForm({onNext}) {
       addressType: type,
       company: "",
       floor: "",
-      apartmentNumber: "",
+      apartment: "",
     }));
     setErrors({});
   };
@@ -94,20 +102,19 @@ export default function AddressForm({onNext}) {
     }
 
     const payload = { ...formData };
+    console.log(payload)
     addAddress(payload);
-     onNext(); 
+    onNext();
   };
-
-
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto md:p-4 space-y-4 bg-white rounded-xl">
       <h2 className="text-xl font-semibold">New Address</h2>
 
-      <FieldWrapper name="city" fieldRefs={fieldRefs}>
-        <label className="block text-sm">Area</label>
-        <Input name="city" value={formData.area} onChange={handleChange} placeholder="Al Rayyan" />
-        {errors.area && <p className="text-sm text-red-500 mt-1">{errors.area}</p>}
+      <FieldWrapper name="email" fieldRefs={fieldRefs}>
+        <label className="block text-sm">Email</label>
+        <Input name="email" value={formData.email} onChange={handleChange} placeholder="Enter an email" />
+        {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
       </FieldWrapper>
 
       <div className="flex gap-2">
@@ -143,9 +150,9 @@ export default function AddressForm({onNext}) {
 
       {formData.addressType === "Apartment" && (
         <div className="grid grid-cols-2 gap-2">
-          <FieldWrapper name="apartmentNumber" fieldRefs={fieldRefs}>
-            <Input name="apartmentNumber" value={formData.apartmentNumber} onChange={handleChange} label="Apartment Number" />
-            {errors.apartmentNumber && <p className="text-sm text-red-500 mt-1">{errors.apartmentNumber}</p>}
+          <FieldWrapper name="apartment" fieldRefs={fieldRefs}>
+            <Input name="apartment" value={formData.apartment} onChange={handleChange} label="Apartment Number" />
+            {errors.apartment && <p className="text-sm text-red-500 mt-1">{errors.apartment}</p>}
           </FieldWrapper>
           <FieldWrapper name="floor" fieldRefs={fieldRefs}>
             <Input name="floor" value={formData.floor} onChange={handleChange} label="Floor" />
@@ -154,18 +161,79 @@ export default function AddressForm({onNext}) {
         </div>
       )}
 
-      <FieldWrapper name="street" fieldRefs={fieldRefs}>
-        <Input name="street" value={formData.street} onChange={handleChange} label="Street" />
-        {errors.street && <p className="text-sm text-red-500 mt-1">{errors.street}</p>}
-      </FieldWrapper>
+      <div className="grid grid-cols-2 gap-2">
+        <FieldWrapper name="city" fieldRefs={fieldRefs}>
+          <div className="relative w-full">
+            <select
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              className={`peer w-full border rounded-lg px-3 pt-5 pb-2 text-sm text-gray-900 focus:outline-none transition-all duration-200
+        ${errors.city ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300 focus:ring-primary focus:border-primary"}`}
+            >
+              <option value="">Select a city</option>
+              {CITIES.map((city) => (
+                <option key={city} value={city}>{city}</option>
+              ))}
+            </select>
+            <label
+              className={`absolute left-3 px-1 bg-white transition-all duration-200 pointer-events-none
+        ${formData.city ? "top-1 text-xs" : "top-3.5 text-sm"}
+        ${errors.city ? "text-red-500" : formData.city ? "text-primary" : "text-gray-400"}`}
+            >
+              City
+            </label>
+
+            {errors.city && (
+              <p className="mt-1 text-sm text-red-600">{errors.city}</p>
+            )}
+          </div>
+        </FieldWrapper>
+
+
+        <FieldWrapper name="street" fieldRefs={fieldRefs}>
+          <Input name="street" value={formData.street} onChange={handleChange} label="Street" />
+          {errors.street && <p className="text-sm text-red-500 mt-1">{errors.street}</p>}
+        </FieldWrapper>
+      </div>
 
       <FieldWrapper name="phone" fieldRefs={fieldRefs}>
-        <Input name="phone" value={formData.phone} onChange={handleChange} label="Phone number" type="tel" />
-        {errors.phone && <p className="text-sm text-red-500 mt-1">{errors.phone}</p>}
+        <div className="relative w-full">
+          {/* Flag inside input */}
+          {/* <span></span> */}
+          <img className="absolute w-7 h-5 left-2 top-1/2 -translate-y-1/2 text-xl" src="https://cdn.shopify.com/s/files/1/0766/6365/2609/files/Flag_of_Qatar__3-2__svg.png?v=1758804020" alt="" />
+
+          <input
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="+974xxxxxxxx"
+            type="tel"
+            className={` peer w-full border rounded-lg px-10 pt-5 pb-2 text-sm text-gray-900 focus:outline-none transition-all duration-200
+        ${errors.phone ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300 focus:ring-primary focus:border-primary"}`}
+          />
+
+          <label
+            className={`absolute left-10 px-1 bg-white transition-all duration-200 pointer-events-none
+        ${formData.phone ? "top-1 text-xs" : "top-3.5 text-sm"}
+        ${errors.phone ? "text-red-500" : formData.phone ? "text-primary" : "text-gray-400"}`}
+          >
+            Phone number
+          </label>
+
+          {errors.phone && (
+            <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+          )}
+        </div>
       </FieldWrapper>
 
-      <Input name="directions" value={formData.directions} onChange={handleChange} label="Additional directions (optional)" />
-      <Input name="label" value={formData.label} onChange={handleChange} label="Address label (optional)" />
+
+      <Input
+        name="directions"
+        value={formData.directions}
+        onChange={handleChange}
+        label="Additional directions (optional)"
+      />
 
       <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white">
         Save address

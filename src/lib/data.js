@@ -8,7 +8,7 @@ import {
   PRODUCT_QUERY,
   NAVIGATION_QUERY,
   CREATE_CUSTOMER_MUTATION, CUSTOMER_ACCESS_TOKEN_CREATE,
-  CART_CREATE_MUTATION, 
+  CART_CREATE_MUTATION,
   CHECKOUT_CREATE_MUTATION,
   CREATE_DRAFT_ORDER_MUTATION
 } from './queries';
@@ -62,7 +62,7 @@ export const getProductsByCollection = async (handle) => {
     }
 
     const products = data.collection.products.edges.map(({ node }) => node);
-    return {products};
+    return { products };
   } catch (error) {
     console.error(`Error fetching products for collection "${handle}":`, error.message || error);
     return { products: [], error: error.message || 'Unknown error' };
@@ -345,7 +345,7 @@ export const createCheckout = async (cartItems, address, email) => {
 
 
 export const createDraftOrder = async (cartItems, address, email) => {
-  // console.log(cartItems)
+  console.log(address, email)
   if (!Array.isArray(cartItems) || !cartItems.length) {
     throw new Error("Your cart is empty.");
   }
@@ -362,18 +362,41 @@ export const createDraftOrder = async (cartItems, address, email) => {
     };
   });
 
+  const labels = [];
+
+  
+  if (address.Building) {
+    labels.push(`building - ${address.Building}`);
+  }
+  if (address.company) {
+    labels.push(`company - ${address.company}`);
+  }
+  if (address.apartment) {
+    labels.push(`apartment - ${address.apartment}`);
+  }
+  if (address.floor) {
+    labels.push(`floor - ${address.floor}`);
+  }
+  if (address.addressType) {
+    labels.push(`addressType - ${address.addressType}`);
+  }
+if (address.directions) {
+    labels.push(`directions - ${address.directions}`);
+  }
+
   const input = {
     lineItems,
     email: email || "guest@example.com",
     phone: address.phone,
+    note: labels.join(" | ") || "-",
     shippingAddress: {
       address1: address.street,
       city: address.city,
       country: "Qatar",
       phone: address.phone,
-      firstName: (address.fullName || "").split(" ")[0] || "",
-      lastName: (address.fullName || "").split(" ").slice(1).join(" ") || "",
-      zip: address.zip || "",
+      firstName: (address.fullName || "-").split(" ")[0] || "",
+      lastName: (address.fullName || "-").split(" ").slice(1).join(" ") || "",
+      zip: address.zip || "-",
     },
     tags: ["COD"], // Optional, for filtering COD orders
     useCustomerDefaultAddress: false,
@@ -384,6 +407,6 @@ export const createDraftOrder = async (cartItems, address, email) => {
   const res = await shopifyAdminFetch(CREATE_DRAFT_ORDER_MUTATION, { input });
   const errors = res?.draftOrderCreate?.userErrors || [];
   if (errors.length) throw new Error(errors.map((e) => e.message).join(", "));
-
+console.log(res)
   return res?.draftOrderCreate?.draftOrder;
 };
