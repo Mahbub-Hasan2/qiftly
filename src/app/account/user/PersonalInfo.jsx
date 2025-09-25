@@ -9,7 +9,7 @@ const data = {
     email: "example@email.com",
   }
 
-export default function PersonalInfo() {
+export default function PersonalInfo({customer}) {
   const [activeModal, setActiveModal] = useState(null);
 
   const [profileData, setProfileData] = useState(data);
@@ -36,7 +36,7 @@ const handleChange = (e) => {
           <label className="text-gray-400 text-sm mb-2 block">First Name</label>
           <input
             type="text"
-            value={profileData?.firstName}
+            value={customer?.firstName || ""}
             className="input-field text-gray-600"
             disabled
           />
@@ -45,7 +45,7 @@ const handleChange = (e) => {
           <label className="text-gray-400 text-sm mb-2 block">Last Name</label>
           <input
             type="text"
-            value={profileData?.lastName}
+            value={customer?.lastName || ""}
             className="input-field text-gray-600"
             disabled
           />
@@ -54,7 +54,7 @@ const handleChange = (e) => {
           <label className="text-gray-400 text-sm mb-2 block">Phone</label>
           <input
             type="text"
-            value={profileData?.phone}
+            value={customer?.phone || ""}
             className="input-field text-gray-600"
             disabled
           />
@@ -65,7 +65,7 @@ const handleChange = (e) => {
           </label>
           <input
             type="email"
-            value={profileData?.email}
+            value={customer?.email || ""}
             className="input-field text-gray-600"
             disabled
           />

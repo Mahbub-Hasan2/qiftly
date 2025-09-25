@@ -6,7 +6,7 @@ import Orders from "./Orders";
 import OccasionContent from "./OccasionContent";
 import SavedAddresses from "./SavedAddresses";
 
-export default function Contents() {
+export default function Contents({customer}) {
   const [hash, setHash] = useState("");
 
   useEffect(() => {
@@ -16,14 +16,19 @@ export default function Contents() {
     return () => window.removeEventListener("hashchange", updateHash);
   }, []);
 
-  return (
-    hash && (
-      <div className="w-full md:flex-1">
-        {hash === "profile" && <PersonalInfo />}
-        {hash === "orders" && <Orders />}
-        {hash === "address" && <SavedAddresses />}
-        {hash === "occassions" && <OccasionContent />}
-      </div>
-    )
-  );
+  const renderContent = () => {
+    switch (hash) {
+      case "orders":
+        return <Orders />;
+      case "address":
+        return <SavedAddresses />;
+      case "occassions":
+        return <OccasionContent />;
+      case "profile":
+      default:
+        return <PersonalInfo customer={customer} />; // ডিফল্ট হিসেবে PersonalInfo
+    }
+  };
+
+  return <div className="w-full md:flex-1">{renderContent()}</div>;
 }

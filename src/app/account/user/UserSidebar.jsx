@@ -11,6 +11,7 @@ import {
   Trash,
 } from "lucide-react";
 import Modal from "./Modal";
+import LogoutButton from "@/components/Auth/LogoutButton";
 
 const sidebarItems = [
   {
@@ -35,7 +36,7 @@ const sidebarItems = [
   }
 ];
 
-export default function UserSidebar() {
+export default function UserSidebar({customer}) {
   const [active, setActive] = useState("");
   const [activeModal, setActiveModal] = useState(null);
 
@@ -68,11 +69,10 @@ export default function UserSidebar() {
           />
         ) : (
           <div className="size-10 shrink-0 bg-gray-200 text-gray-800 font-semibold grid place-items-center text-lg rounded-full border-2 border-secondary">
-            {fullName.split(" ")[0].slice(0, 1).toLocaleUpperCase() +
-              fullName.split(" ")[1]?.slice(0, 1).toLocaleUpperCase()}
+            {customer?.firstName.split(" ")[0].slice(0, 1).toLocaleUpperCase() || ""}
           </div>
         )}
-        <h2 className="font-bold text-xl line-clamp-1">Hey {fullName}</h2>
+        <h2 className="font-bold text-xl line-clamp-1">Hey {customer?.firstName || ""}</h2>
       </div>
 
       <ul className="flex flex-col gap-4 md:mt-4">
@@ -134,9 +134,7 @@ export default function UserSidebar() {
           Are you sure you want to logout?
         </p>
         <div className="flex gap-5 mt-7">
-          <button className="button-primary w-full bg-transparent border border-primary text-primary">
-            Yes, Logout
-          </button>
+          <LogoutButton/>
           <button
             onClick={() => setActiveModal(null)}
             className="button-primary w-full border border-primary px-6"
