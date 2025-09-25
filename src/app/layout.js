@@ -6,6 +6,7 @@ import { Poppins, Roboto } from "next/font/google";
 import { getNavigationMenu } from "@/lib/data";
 import { CartProvider } from "@/components/contexts/CartContext";
 import { AddressProvider } from "@/components/contexts/AddressContext";
+import { UserProvider } from "@/context/UserContext";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -34,16 +35,18 @@ export default async function RootLayout({ children }) {
         suppressHydrationWarning
         className={`${poppins.className} ${roboto.className} antialiased`}
       >
-        <CartProvider>
-          <AddressProvider>
-          <UIProvider>
-            <Navigations menuItems={menuItems} />
-            {children}
-            <Footer />
-            <div id="modal-root"></div>
-          </UIProvider>
-          </AddressProvider>
-        </CartProvider>
+        <UserProvider>
+          <CartProvider>
+            <AddressProvider>
+              <UIProvider>
+                <Navigations menuItems={menuItems} />
+                {children}
+                <Footer />
+                <div id="modal-root"></div>
+              </UIProvider>
+            </AddressProvider>
+          </CartProvider>
+        </UserProvider>
       </body>
     </html>
   );

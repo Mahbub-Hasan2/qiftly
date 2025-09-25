@@ -1,12 +1,13 @@
-// src/components/Auth/RegisterForm.jsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import EmailVerificationForm from "./EmailVerificationForm";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({ firstName:"", lastName:"", email:"", password:"", confirmPassword:"" });
   const [errors, setErrors] = useState({});
   const [showVerification, setShowVerification] = useState(false);
@@ -38,15 +39,28 @@ export default function RegisterForm() {
 
   const handleVerified = async () => {
     try{
-      const res = await fetch("/api/register", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(formData)});
+      const res = await fetch("/api/register", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        credentials: "same-origin", // <<< ensure browser receives/sets cookie from response
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password
+        })
+      });
       const data = await res.json();
-      console.log('registrd data= ', data) // {customer: {…}}customer: email: "alubuluqatar@gmail.com"id: "gid://shopify/Customer/8752101884161"[[Prototype]]: Object[[Prototype]]: Object
-      if(res.ok) {
+      if(res.ok && data.success) {
         setSubmitted(true);
         setShowVerification(false);
         setFormData({ firstName:"", lastName:"", email:"", password:"", confirmPassword:"" });
-        otpSentRef.current = false; // reset for next time
-      } else setErrors({ email: data.error || "Registration failed" });
+        otpSentRef.current = false;
+        // token cookie already set by server; redirect to profile
+        router.push("/account/user");
+      } else {
+        setErrors({ email: data.error || "Registration failed" });
+      }
     } catch(err){ setErrors({ email:"Server error" }); }
   }
 
@@ -58,6 +72,7 @@ export default function RegisterForm() {
           const res = await fetch("/api/send-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
             body: JSON.stringify({ email: formData.email }),
           });
           const data = await res.json();
@@ -75,7 +90,7 @@ export default function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded shadow">
       <h2 className="text-xl mb-4">Register</h2>
-      {["firstName","lastName","email","password","confirmPassword"].map((field)=>(
+      {["firstName","lastName","email","password","confirmPassword"].map((field)=>( 
         <div key={field} className="mb-3">
           <Input type={field.includes("password")?"password":"text"} name={field} placeholder={field} value={formData[field]} onChange={handleChange} />
           {errors[field] && <p className="text-red-500 text-sm">{errors[field]}</p>}

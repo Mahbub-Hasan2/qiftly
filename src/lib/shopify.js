@@ -7,6 +7,7 @@ const storefrontAccessToken =
 
 const adminAccessToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN; // 🔑 এইটা Admin API token লাগবে
 
+const SHOP_URL = `https://${domain}/api/2024-10/graphql.json`;
 // ---------------- Storefront API Fetch ----------------
 const shopifyFetch = async (query, variables = {}) => {
   const URL = `https://${domain}/api/2024-04/graphql.json`;
@@ -69,4 +70,80 @@ const shopifyAdminFetch = async (query, variables = {}) => {
   }
 };
 
-export { shopifyFetch, shopifyAdminFetch };
+
+
+/** create customer */
+export async function createCustomer(input) {
+  const query = `
+    mutation customerCreate($input: CustomerCreateInput!) {
+      customerCreate(input: $input) {
+        customer {
+          id
+          email
+          firstName
+          lastName
+        }
+        customerUserErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { input });
+  return data.customerCreate;
+}
+
+
+
+/** create access token (login) */
+export async function createCustomerAccessToken(email, password) {
+  const query = `
+    mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+      customerAccessTokenCreate(input: $input) {
+        customerAccessToken {
+          accessToken
+          expiresAt
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { input: { email, password } });
+  return data.customerAccessTokenCreate;
+}
+
+/** get customer using customerAccessToken via storefront header */
+export async function getCustomerByToken(customerAccessToken) {
+  const query = `
+    query customer($customerAccessToken: String!) {
+      customer(customerAccessToken: $customerAccessToken) {
+        id
+        email
+        firstName
+        lastName
+      }
+    }
+  `;
+
+  const resp = await axios.post(
+    SHOP_URL,
+    {
+      query,
+      variables: { customerAccessToken }
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
+      },
+    }
+  );
+  return resp.data.data?.customer ?? null;
+}
+
+
+export { shopifyFetch, shopifyAdminFetch, createCustomerAccessToken, getCustomerByToken };
