@@ -324,29 +324,12 @@ export const CUSTOMER_ACCESS_TOKEN_CREATE = `
 
 // lib/queries.js
 // lib/queries.js
-
 export const CHECKOUT_CREATE_MUTATION = `
 mutation checkoutCreate($input: CheckoutCreateInput!) {
   checkoutCreate(input: $input) {
     checkout {
       id
       webUrl
-      lineItems(first: 10) {
-        edges {
-          node {
-            title
-            quantity
-          }
-        }
-      }
-      shippingAddress {
-        firstName
-        lastName
-        address1
-        city
-        country
-        phone
-      }
     }
     checkoutUserErrors {
       field
@@ -355,6 +338,38 @@ mutation checkoutCreate($input: CheckoutCreateInput!) {
   }
 }
 `;
+
+// এটা কাস্টমার থেকে একেবারে সব ইনফরমেশন সহ নেওয়া হচ্ছে । 
+// export const CHECKOUT_CREATE_MUTATION = `
+// mutation checkoutCreate($input: CheckoutCreateInput!) {
+//   checkoutCreate(input: $input) {
+//     checkout {
+//       id
+//       webUrl
+//       lineItems(first: 10) {
+//         edges {
+//           node {
+//             title
+//             quantity
+//           }
+//         }
+//       }
+//       shippingAddress {
+//         firstName
+//         lastName
+//         address1
+//         city
+//         country
+//         phone
+//       }
+//     }
+//     checkoutUserErrors {
+//       field
+//       message
+//     }
+//   }
+// }
+// `;
 
 
 

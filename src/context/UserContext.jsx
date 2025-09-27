@@ -1,17 +1,17 @@
 "use client";
 
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const UserContext = createContext({
   user: null,
   loading: true,
-  refreshUser: async () => {},
+  refreshUser: async () => { },
 });
 
 export function UserProvider({ children, initialUser = null }) {
   const [user, setUser] = useState(initialUser);
   const [loading, setLoading] = useState(!initialUser);
-console.log(user)
+  console.log("user", user) // null
   const refreshUser = async () => {
     try {
       setLoading(true);
@@ -29,6 +29,14 @@ console.log(user)
       setLoading(false);
     }
   };
+
+
+  // ✅ Context mount হওয়ার পর auto refresh
+  useEffect(() => {
+    if (!initialUser) {
+      refreshUser();
+    }
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, loading, refreshUser }}>

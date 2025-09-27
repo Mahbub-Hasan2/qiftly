@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { X, Trash2 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { useUI } from "../contexts/UIContext";
 import SpecialRequestSection from "./SpecialRequestSection";
+import { createCheckout } from "@/lib/data";
+import { UserContext } from "@/context/UserContext";
 
 export default function CartSidebar({ isOpen, onClose }) {
   const router = useRouter();
-
   const { cartItems, updateQuantity, removeItem, totalPrice } = useCart();
   const { setIsCartOpen } = useUI();
+  const { user } = useContext(UserContext); // ✅ UserContext থেকে ইউজার ডাটা
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -19,6 +21,45 @@ export default function CartSidebar({ isOpen, onClose }) {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  const handleCheckout = async () => {
+    try {
+      if (!cartItems.length) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      // ✅ যদি ইউজার লগিন থাকে তাহলে তার ডাটা নেবো, নাহলে dummy fallback
+      const address = user?.email
+        ? {
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          address1: user.address1 || "",
+          city: user.city || "Doha",
+          phone: user.phone || "",
+          zip: user.zip || "",
+          country: "Qatar", // country code
+        }
+        : {
+          firstName: "Guest",
+          lastName: "User",
+          address1: "Doha Street",
+          city: "Doha",
+          phone: "00000000",
+          zip: "00000",
+          country: "Qatar",
+        };
+
+      const email = user?.email || ""; // লগিন থাকলে email, নাহলে empty string
+
+      const checkout = await createCheckout(cartItems, address, email);
+
+      setIsCartOpen(false);
+      window.location.href = checkout.checkoutUrl; // Shopify checkout redirect
+    } catch (err) {
+      alert("Checkout failed: " + (err?.message || "Unknown error"));
+    }
+  };
 
   return (
     <div className="relative">
@@ -37,7 +78,10 @@ export default function CartSidebar({ isOpen, onClose }) {
           {/* Header */}
           <div className="flex justify-between items-center py-2 md:mb-2 mb-0">
             <h2 className="text-2xl font-extrabold tracking-tight font-poppins">Cart</h2>
-            <button onClick={onClose} className="cursor-pointer p-3 shadow rounded-full bg-white">
+            <button
+              onClick={onClose}
+              className="cursor-pointer p-3 shadow rounded-full bg-white"
+            >
               <X className="w-5 h-5 text-primary " />
             </button>
           </div>
@@ -63,13 +107,20 @@ export default function CartSidebar({ isOpen, onClose }) {
                     <div className="flex-1 font-poppins">
                       <div className="flex justify-between">
                         <div>
-                          <h4 className="text-sm text-gray-700 line-clamp-2">{item.title}</h4>
+                          <h4 className="text-sm text-gray-700 line-clamp-2">
+                            {item.title}
+                          </h4>
                           <p className="text-md font-medium text-gray-900 mt-1">
                             {item.currency}{" "}
-                            {typeof item.price === "number" ? item.price.toFixed(2) : "0.00"}
+                            {typeof item.price === "number"
+                              ? item.price.toFixed(2)
+                              : "0.00"}
                           </p>
                         </div>
-                        <button onClick={() => removeItem(item.variantId)} title="Remove">
+                        <button
+                          onClick={() => removeItem(item.variantId)}
+                          title="Remove"
+                        >
                           <Trash2
                             size={40}
                             className="cursor-pointer p-3 mb-5 bg-gray-50 text-primary rounded-full"
@@ -123,13 +174,20 @@ export default function CartSidebar({ isOpen, onClose }) {
                   <div className="flex-1 font-poppins">
                     <div className="flex justify-between">
                       <div>
-                        <h4 className="text-sm text-gray-700 line-clamp-2">{item.title}</h4>
+                        <h4 className="text-sm text-gray-700 line-clamp-2">
+                          {item.title}
+                        </h4>
                         <p className="text-md font-medium text-gray-900 mt-1">
                           {item.currency}{" "}
-                          {typeof item.price === "number" ? item.price.toFixed(2) : "0.00"}
+                          {typeof item.price === "number"
+                            ? item.price.toFixed(2)
+                            : "0.00"}
                         </p>
                       </div>
-                      <button onClick={() => removeItem(item.variantId)} title="Remove">
+                      <button
+                        onClick={() => removeItem(item.variantId)}
+                        title="Remove"
+                      >
                         <Trash2
                           size={40}
                           className="cursor-pointer p-3 mb-5 bg-gray-50 text-primary rounded-full"
@@ -166,53 +224,54 @@ export default function CartSidebar({ isOpen, onClose }) {
           <SpecialRequestSection />
 
           {/* Footer */}
-
-          <div className="md:pt-4 pt-2 font-poppins"> {/*এই পার্টকে আমি স্টিকি করতে চাই বটমে , যদি প্রডাক্ট বেশি হয় তাহলে সি্িটকি চলে যাবে , যেনো নিচের দিকে চলে যায়। */}
+          <div className="md:pt-4 pt-2 font-poppins">
             <h2 className="font-medium text-gray-800 text-xl mb-4">Payment summary</h2>
 
             {/* Subtotal */}
             <div className="flex justify-between text-sm mb-3">
               <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium text-gray-800">QR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
+              <span className="font-medium text-gray-800">
+                QR{" "}
+                {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}
+              </span>
             </div>
 
             {/* Delivery (with welcome gift) */}
             <div className="flex justify-between text-sm items-center mb-3">
               <div className="flex items-center gap-2 text-gray-600">
                 <span>Free delivery</span>
-                <span className="bg-yellow-200 text-black text-xs px-2 py-0.5 rounded font-medium">Welcome gift</span>
+                <span className="bg-yellow-200 text-black text-xs px-2 py-0.5 rounded font-medium">
+                  Welcome gift
+                </span>
                 <span className="text-gray-400 text-xs cursor-pointer">ⓘ</span>
               </div>
               <span className="line-through text-gray-400 text-sm">QR 10.00</span>
             </div>
-            
+
             {/* Total */}
             <div className="flex justify-between font-semibold text-base mb-4">
               <span>Total amount</span>
-              <span className="text-black">QR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}</span>
+              <span className="text-black">
+                QR {typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00"}
+              </span>
             </div>
             <hr className=" my-3 md:border-gray-200 border-0 md:mb-2 mb-15" />
 
-
-
             {/* Buttons */}
-            <div className="sm:static fixed bottom-0 left-0 w-full bg-[#FFFBF7] md:px-0 px-4 py-3 border-t border-gray-300 sm:border-none z-50"> {/*এই ডিব টি আমি বটম এ ফিক্সড করে রাখতে চাই  শুধু মাত্র মোবাইলে। */}
+            <div className="sm:static fixed bottom-0 left-0 w-full bg-[#FFFBF7] md:px-0 px-4 py-3 border-t border-gray-300 sm:border-none z-50">
               <div className="flex gap-3">
                 <button className="flex-1 cursor-pointer font-medium font-poppins border border-black text-black md:py-2 py-4 rounded-full text-sm hover:bg-gray-100 transition">
                   Add items
                 </button>
                 <button
-                  onClick={() => {
-                    setIsCartOpen(false);
-                    router.push("/Checkout");
-                  }}
-                  className="flex-1 cursor-pointer font-medium font-poppins bg-primary text-white md:py-2 py-4 rounded-full text-sm hover:bg-orange-600 transition">
+                  onClick={handleCheckout}
+                  className="flex-1 cursor-pointer font-medium font-poppins bg-primary text-white md:py-2 py-4 rounded-full text-sm hover:bg-orange-600 transition"
+                >
                   Checkout
                 </button>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

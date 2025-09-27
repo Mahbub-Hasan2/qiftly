@@ -299,49 +299,98 @@ export const generateCustomerAccessToken = async ({ email, password }) => {
 };
 
 
-
 function getVariantId(item) {
+  // Ensure Shopify GID format
+  if (!String(item.variantId).startsWith("gid://")) {
+    return `gid://shopify/ProductVariant/${item.variantId}`;
+  }
   return item.variantId;
 }
 
 export const createCheckout = async (cartItems, address, email) => {
+  // console.log(address)
   if (!Array.isArray(cartItems) || !cartItems.length) {
     throw new Error("Your cart is empty.");
   }
 
-  const lineItems = cartItems
-    .filter(item => item.variantId)
-    .map(item => ({
-      variantId: getVariantId(item),
-      quantity: Number(item.quantity || 1),
-    }));
+  // 1. Cart Create
+  const cartRes = await shopifyFetch(
+    `
+    mutation cartCreate($input: CartInput!) {
+      cartCreate(input: $input) {
+        cart {
+          id
+          checkoutUrl
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+    `,
+    {
+      input: {
+        buyerIdentity: {
+          ...(email ? { email } : {}),
+          // countryCode: "QA",
+          // firstName: address.firstName, // ✅ add firstName
+          // lastName: address.lastName,   // ✅ add lastName
+        },
+      },
+    }
+  );
 
-  const input = {
-    email: email || "guest@example.com", // fallback email
-    lineItems,
-    shippingAddress: {
-      address1: address.street,
-      city: address.city,
-      country: "Qatar",
-      phone: address.phone,
-      firstName: (address.fullName || "").split(" ")[0] || "",
-      lastName: (address.fullName || "").split(" ").slice(1).join(" ") || "",
-      zip: address.zip || "",
-    },
-  };
+  const cart = cartRes?.cartCreate?.cart;
+  if (!cart?.id) throw new Error("Cart create failed");
 
-  // console.log("checkout input", input);
+  // 2. Cart Lines Add
+  const lines = cartItems.map((item) => ({
+    merchandiseId: getVariantId(item),
+    quantity: Number(item.quantity || 1),
+  }));
 
-  const res = await shopifyFetch(CHECKOUT_CREATE_MUTATION, { input });
-  const errors = res?.checkoutCreate?.checkoutUserErrors || [];
-  if (errors.length) throw new Error(errors.map(e => e.message).join(", "));
+  const linesRes = await shopifyFetch(
+    `
+    mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+      cartLinesAdd(cartId: $cartId, lines: $lines) {
+        cart {
+          id
+          checkoutUrl
+          lines(first: 10) {
+            edges {
+              node {
+                id
+                quantity
+                merchandise {
+                  ... on ProductVariant {
+                    id
+                    title
+                  }
+                }
+              }
+            }
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+    `,
+    {
+      cartId: cart.id,
+      lines,
+    }
+  );
 
-  const checkout = res?.checkoutCreate?.checkout;
-  if (!checkout?.webUrl) throw new Error("Checkout created but no webUrl returned.");
-  return checkout;
+  const updatedCart = linesRes?.cartLinesAdd?.cart;
+  if (!updatedCart?.checkoutUrl)
+    throw new Error("Checkout URL not found");
+
+  return updatedCart;
 };
-
-
 
 
 export const createDraftOrder = async (cartItems, address, email) => {
@@ -364,7 +413,7 @@ export const createDraftOrder = async (cartItems, address, email) => {
 
   const labels = [];
 
-  
+
   if (address.Building) {
     labels.push(`building - ${address.Building}`);
   }
@@ -380,13 +429,13 @@ export const createDraftOrder = async (cartItems, address, email) => {
   if (address.addressType) {
     labels.push(`addressType - ${address.addressType}`);
   }
-if (address.directions) {
+  if (address.directions) {
     labels.push(`directions - ${address.directions}`);
   }
 
   const input = {
     lineItems,
-    email: email || "guest@example.com",
+    email: email || "ex@gmail.com",
     phone: address.phone,
     note: labels.join(" | ") || "-",
     shippingAddress: {
@@ -407,6 +456,6 @@ if (address.directions) {
   const res = await shopifyAdminFetch(CREATE_DRAFT_ORDER_MUTATION, { input });
   const errors = res?.draftOrderCreate?.userErrors || [];
   if (errors.length) throw new Error(errors.map((e) => e.message).join(", "));
-console.log(res)
+  console.log(res)
   return res?.draftOrderCreate?.draftOrder;
 };
