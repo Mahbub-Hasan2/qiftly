@@ -15,7 +15,6 @@ export default function DataLoader({ data, error, loading = false, children }) {
   }
 
   if (!data || (Array.isArray(data) && data.length === 0)) {
-    // console.log(data)
     return (
       <div className="text-center py-6">
         <p className="text-gray-600">কোনো তথ্য পাওয়া যায়নি।</p>
@@ -23,6 +22,5 @@ export default function DataLoader({ data, error, loading = false, children }) {
     );
   }
 
-  // children কে ফাংশন হিসেবে কল করে ডাটা পাঠানো হচ্ছে
-  return children(data);
+  return typeof children === "function" ? children(data) : children;
 }

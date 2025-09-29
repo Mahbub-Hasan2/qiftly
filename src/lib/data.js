@@ -125,29 +125,23 @@ export const getOccasionTabs = async () => {
     }
 
     const tabsData = edges.map(({ node }) => {
-      const tab = {
-        link: node.displayName || "",
-        img: "",
-        tabs_name: "",
-        collections: "",
-      };
+      const tab = {};
 
       node.fields?.forEach((field) => {
-        switch (field.key) {
-          case "img":
-            // যদি reference থেকে image.url পাওয়া যায়
-            tab.img = field.reference?.image?.url || field.value || "";
-            break;
-          case "tab_name":
-            tab.tabs_name = field.value || "";
-            break;
-          case "collections":
-            tab.collections = field.value || "";
-            break;
+        if (field.reference?.image?.url) {
+          tab[field.key] = field.reference.image.url;
+        } else {
+          tab[field.key] = field.value || "";
         }
       });
+
+      // Safety: নিশ্চিত করি সব key আছে
+      tab.tabs_name = tab.tabs_name || "Unknown";
+      tab.img = tab.img || "/placeholder.png";
+
       return tab;
     });
+
     return { tabsData };
   } catch (error) {
     console.error("Error fetching occasion tabs:", error.message || error);
@@ -157,8 +151,6 @@ export const getOccasionTabs = async () => {
     };
   }
 };
-
-
 /**
  * 👉 product details
  */

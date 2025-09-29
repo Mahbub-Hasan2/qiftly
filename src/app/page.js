@@ -26,7 +26,7 @@ export default async function Home() {
           {/* <OccasionBasedGifting /> */}
           {/* <RoomWiseDecor /> */}
           <DataLoader data={tabsData} error={tabsError}>
-            {(tab) => <CategorySection tabs={tab} title="Gifts for Every Occasion" />}
+            {(data) => <CategorySection tabs={data} title="Gifts for Every Occasion" />}
           </DataLoader>
           {/* <GiftFinderWizard /> */}
           <DataLoader data={products} error={productsError}>

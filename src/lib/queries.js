@@ -128,7 +128,7 @@ export const HERO_SLIDER_METAOBJECT_QUERY = `{
 }`;
 
 export const OccasionTabs_METAOBJECT_QUERY = `{
-  metaobjects(first: 5, type: "gifts_for_every_occasion_tabs") {
+  metaobjects(first: 20, type: "gifts_for_every_occasion_tabs") {
     edges {
       node {
         id
