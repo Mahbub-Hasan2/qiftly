@@ -344,7 +344,7 @@ export const createCheckout = async (cartItems, address, email) => {
   const cart = cartRes?.cartCreate?.cart;
   if (!cart?.id) throw new Error("Cart create failed");
 
-  // 2. Cart Lines Add
+  // 2. Cart Lines Add dfsd
   const lines = cartItems.map((item) => ({
     merchandiseId: getVariantId(item),
     quantity: Number(item.quantity || 1),
