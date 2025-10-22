@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 
-function GroupedMenu({ menu }) {      
+function GroupedMenu({ menu }) {     
     const groupedByTag = useMemo(() => {
         const groups = {};
 

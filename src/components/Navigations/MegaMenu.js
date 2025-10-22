@@ -46,7 +46,9 @@ export default function MegaMenu({ menuItems }) {
                                                     {menu.label}
                                                 </Link>
                                             ) : (
-                                                <span className="text-gray-700 text-sm font-medium">{menu.label}</span>
+                                                <Link href={new URL(menu.url).pathname}>
+                                                    <span className="text-gray-700 text-sm font-medium">{menu.label}</span>
+                                                </Link>
                                             );
                                         })()
                                     )
