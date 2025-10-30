@@ -37,7 +37,7 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-extrabold mb-4">Useful Links</h3>
           <ul className="space-y-2 text-md text-gray-400 ">
-            <li><a href="#" className="hover:underline hover:text-gray-900">About Us</a></li>
+            <li><Link href="/aboutUs" className="hover:underline hover:text-gray-900">About Us</Link></li>
             <li><a href="#" className="hover:underline hover:text-gray-900">Contact</a></li>
             <li><a href="#" className="hover:underline hover:text-gray-900">FAQ</a></li>
             <li><a href="#" className="hover:underline hover:text-gray-900">Privacy Policy</a></li>
@@ -63,7 +63,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
+      
       {/* Copyright */}
       <div className="mt-10 text-center text-sm border-t border-gray-700 pt-4">
         © {new Date().getFullYear()} Qiftly. All rights reserved.
